@@ -1,0 +1,99 @@
+//
+//  ChartVC.swift
+//  flowCalc
+//
+//  Created by reinert wasserman on 23/6/2023.
+//
+
+import UIKit
+import AcaiaSDK
+import SwiftUI
+import DGCharts
+import TinyConstraints
+
+class ChartVC: UIViewController {
+    var data: [ChartDataEntry] = []
+    var timer: Timer!
+    var count: Double = 0
+    var timeInDouble: Double = 0
+    lazy var lineChart: LineChartView = {
+        let chartView = LineChartView()
+        return chartView
+    }()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        createLineChart()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        if AcaiaManager.shared().connectedScale != nil{
+            createTimer()
+            print("Timer Started")
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+                timer?.invalidate()
+                timer = nil
+            print("Timer Stopped")
+    }
+    override func viewDidDisappear(_ animated: Bool) {
+        data.removeAll()
+    }
+ 
+    
+    func createTimer(){
+        timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(counter), userInfo: nil, repeats: true)
+        
+    }
+    
+    @objc func counter(){
+       
+        count += 0.1
+        let minutes = Int(count) / 60 % 60
+        let seconds = Int(count) % 60
+        let mil = Int(count*10) % 10
+        //print(mil)
+        let m_s = String(format:"%02i.%02i%01i", minutes, seconds,mil)
+        timeInDouble = Double(m_s) ?? 0
+        let flowRate = Double.random(in: 1...10)
+        let entry = ChartDataEntry(x: timeInDouble, y: Double(scaleWeight) ?? 0)
+        self.data.append(entry)
+        self.updateChart(data: self.data)
+    }
+    
+    //MARK: create linechart set chart style
+    func createLineChart(){
+        view.addSubview(lineChart)
+        lineChart.translatesAutoresizingMaskIntoConstraints = false
+        lineChart.centerInSuperview()
+        NSLayoutConstraint.activate([
+            lineChart.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            lineChart.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            ])
+        
+        
+        let yAxis = lineChart.leftAxis
+        lineChart.backgroundColor = UIColor.systemRed.withAlphaComponent(0.1)
+        lineChart.rightAxis.enabled = false
+        yAxis.labelPosition = .insideChart
+    }
+
+//MARK: fill data set line style
+    func updateChart(data: [ChartDataEntry]) {
+            let dataSet = LineChartDataSet(entries: data, label: "Espresso Shot Flow Rate")
+            let data = LineChartData(dataSet: dataSet)
+
+            // Customize the line chart here if you want.
+            // For example:
+            dataSet.colors = [UIColor.red]
+            dataSet.circleColors = [UIColor.red]
+            dataSet.drawCirclesEnabled = false
+            dataSet.mode = .cubicBezier
+            
+            lineChart.data = data
+            data.setDrawValues(false)
+        }
+}
+
