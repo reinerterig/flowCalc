@@ -13,7 +13,7 @@ import TinyConstraints
 import CSV
 import FirebaseStorage
 
-class ChartVC: UIViewController {
+class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var weightData: [ChartDataEntry] = []
     var smoothedFlowData: [ChartDataEntry] = []
     var smoothedFlowRate: Double = 0
@@ -26,6 +26,11 @@ class ChartVC: UIViewController {
     var chartMode: Bool = false
     var isRunning: Bool = false
     let uploadRef = Storage.storage().reference()
+    var menuView: UIView!
+    let numberOfRowsInMenu: Int = 3
+    let menuViewTag: Int = 100  // Arbitrary number, just make sure it's unique in your view hierarchy
+    
+        
     
     @IBOutlet weak var StartStop: UIButton!
     
@@ -38,6 +43,11 @@ class ChartVC: UIViewController {
         super.viewDidLoad()
         createLineChart()
         StartStop.setTitle("Start", for: UIControl.State.normal)
+        
+        // Add long press gesture
+                let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        longPressGesture.minimumPressDuration = 0.2 // Long press duration of one second
+                self.view.addGestureRecognizer(longPressGesture)
         
     }
     
@@ -59,6 +69,82 @@ class ChartVC: UIViewController {
         
         
     }
+    
+    @objc func handleLongPress(gesture: UILongPressGestureRecognizer){
+           if gesture.state == .began {
+               // Remove any existing menu view
+               self.view.viewWithTag(menuViewTag)?.removeFromSuperview()
+
+               // Calculate the height of the table view
+               let rowHeight: CGFloat = 44.0
+               let tableViewHeight: CGFloat = rowHeight * CGFloat(numberOfRowsInMenu)
+
+               // Get the location of the long press
+               let longPressLocation = gesture.location(in: self.view)
+
+               // Create the subview
+               let menuView = UIView()
+               menuView.frame = CGRect(x: longPressLocation.x, y: longPressLocation.y, width: 200, height: tableViewHeight)
+               menuView.backgroundColor = .white
+               menuView.tag = menuViewTag  // Set the tag
+
+               let tableView = UITableView()
+               tableView.frame = menuView.bounds
+               tableView.dataSource = self
+               tableView.delegate = self
+               tableView.rowHeight = rowHeight
+               tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+                   
+               menuView.addSubview(tableView)
+               self.view.addSubview(menuView)
+           }
+       }
+
+    
+    // UITableViewDataSource methods
+        func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+            return 3
+        }
+        
+        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+            switch indexPath.row {
+            case 0:
+                cell.textLabel?.text = "Upload"
+            case 1:
+                cell.textLabel?.text = "Toggle"
+            case 2:
+                cell.textLabel?.text = "Saved Charts"
+            default:
+                break
+            }
+            return cell
+        }
+        
+        // UITableViewDelegate method
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        switch indexPath.row {
+        case 0:
+            //Upload
+            createCSV()
+        case 1:
+            //Toggle
+            if chartMode == true {
+                chartMode = false
+                self.updateChart(wdata: self.weightData, fdata: self.smoothedFlowData)
+            } else {
+                chartMode = true
+                self.updateChart(wdata: self.weightData, fdata: self.smoothedFlowData)
+            }
+        case 2:
+            print("Start / Stop Pressed")
+        default:
+            break
+        }
+        self.view.viewWithTag(menuViewTag)?.removeFromSuperview()
+    }
+
     
     func createTimer(){
         timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(counter), userInfo: nil, repeats: true)
@@ -183,21 +269,9 @@ class ChartVC: UIViewController {
         }
     }
     
-    // toggle between flow & weight chart
-    @IBAction func toggleView(_ sender: UIButton) {
-        if chartMode == true {
-            chartMode = false
-            self.updateChart(wdata: self.weightData, fdata: self.smoothedFlowData)
-        } else {
-            chartMode = true
-            self.updateChart(wdata: self.weightData, fdata: self.smoothedFlowData)
-        }
-    }
     
-    // test for creating file and uploading
-    @IBAction func onUpload(_ sender: UIButton) {
-        createCSV()
-    }
+    
+    
     
     func createCSV(){
         do {
