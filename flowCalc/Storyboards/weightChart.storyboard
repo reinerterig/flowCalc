@@ -16,8 +16,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4m4-i2-l7c">
-                                <rect key="frame" x="147" y="783" width="98" height="35"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4m4-i2-l7c">
+                                <rect key="frame" x="147" y="783" width="99" height="35"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Toggle"/>
                                 <connections>
@@ -32,12 +32,22 @@
                                     <action selector="onBtnStop:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="vu7-J6-4Um"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6wL-gG-z7Y" userLabel="Upload">
+                                <rect key="frame" x="21" y="784" width="105" height="35"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="gray" image="square.and.arrow.up.circle" catalog="system" title="Upload"/>
+                                <connections>
+                                    <action selector="onUpload:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="Kzu-sQ-tT6"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="4m4-i2-l7c" firstAttribute="bottom" secondItem="vDu-zF-Fre" secondAttribute="bottom" id="BrP-Y1-8xY"/>
+                            <constraint firstItem="4m4-i2-l7c" firstAttribute="leading" secondItem="6wL-gG-z7Y" secondAttribute="trailing" constant="21" id="Bzj-TQ-vZj"/>
                             <constraint firstItem="H7h-Ag-DeD" firstAttribute="baseline" secondItem="4m4-i2-l7c" secondAttribute="baseline" id="HgM-N9-fdY"/>
+                            <constraint firstAttribute="bottom" secondItem="6wL-gG-z7Y" secondAttribute="bottom" constant="33" id="M8M-xE-FEC"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="H7h-Ag-DeD" secondAttribute="trailing" constant="37" id="f2r-HA-Fg1"/>
                             <constraint firstItem="4m4-i2-l7c" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="147" id="pi8-Gv-VEg"/>
                             <constraint firstItem="4m4-i2-l7c" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="rrH-G0-UwF"/>
@@ -55,6 +65,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="square.and.arrow.up.circle" catalog="system" width="128" height="123"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

@@ -11,6 +11,7 @@ import SwiftUI
 import DGCharts
 import TinyConstraints
 import CSV
+import FirebaseStorage
 
 class ChartVC: UIViewController {
     var weightData: [ChartDataEntry] = []
@@ -24,6 +25,7 @@ class ChartVC: UIViewController {
     var flowArray: [Double] = []
     var chartMode: Bool = false
     var isRunning: Bool = false
+    let uploadRef = Storage.storage().reference()
     
     @IBOutlet weak var StartStop: UIButton!
     
@@ -191,5 +193,60 @@ class ChartVC: UIViewController {
             self.updateChart(wdata: self.weightData, fdata: self.smoothedFlowData)
         }
     }
+    
+    // test for creating file and uploading
+    @IBAction func onUpload(_ sender: UIButton) {
+        createCSV()
+    }
+    
+    func createCSV(){
+        do {
+            
+            // Timestamp
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyyMMdd-HHmm"
+            let timestamp = formatter.string(from: Date())
+            
+            // Weight Data
+            let weightFileName = "\(timestamp)-WeightData"
+            let weightDocumentDirURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            let weightFileURL = weightDocumentDirURL.appendingPathComponent(weightFileName).appendingPathExtension("csv")
+            
+            let weightStream = OutputStream(url: weightFileURL, append: false)!
+            let weightCSVWriter = try CSVWriter(stream: weightStream)
+            for data in weightData {
+                try weightCSVWriter.write(row: ["\(data.x)", "\(data.y)"])
+            }
+            weightCSVWriter.stream.close()
+            
+            // Smoothed Flow Data
+            let flowFileName = "\(timestamp)-SmoothedFlowData"
+            let flowDocumentDirURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            let flowFileURL = flowDocumentDirURL.appendingPathComponent(flowFileName).appendingPathExtension("csv")
+            
+            let flowStream = OutputStream(url: flowFileURL, append: false)!
+            let flowCSVWriter = try CSVWriter(stream: flowStream)
+            for data in smoothedFlowData {
+                try flowCSVWriter.write(row: ["\(data.x)", "\(data.y)"])
+            }
+            flowCSVWriter.stream.close()
+            
+            // Upload CSVs
+            uploadCSV(timestamp: timestamp,weightCSV: weightFileURL, flowCSV: flowFileURL)
+        } catch {
+            print("Error creating CSV files: \(error)")
+        }
+    }
+
+    func uploadCSV(timestamp: String,weightCSV: URL, flowCSV: URL){
+        let folderName = "\(timestamp)-ChartData"
+        
+        let weightStorageRef = uploadRef.child("flowCalc/ChartData/\(folderName)/\(timestamp)-WeightData.csv")
+        let weightUploadTask = weightStorageRef.putFile(from: weightCSV)
+        
+        let flowStorageRef = uploadRef.child("flowCalc/ChartData/\(folderName)/\(timestamp)-SmoothedFlowData.csv")
+        let flowUploadTask = flowStorageRef.putFile(from: flowCSV)
+    }
+
 }
 
