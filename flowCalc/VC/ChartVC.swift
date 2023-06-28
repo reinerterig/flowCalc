@@ -36,7 +36,11 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     let menuViewTag: Int = 100  // Arbitrary number, just make sure it's unique in your view hierarchy
     let sideTableViewTag: Int = 101  // Arbitrary number, just make sure it's unique in your view hierarchy
     var numberOfRowsInSideTable: Int = 20  // This can be any number you want
+    let storage = Storage.storage()
     var folderList: [String] = []
+    var folderPath: [StorageReference] = []
+    var CSVpath: [StorageReference] = []
+    var CSVname: [String] = []
     
     
     
@@ -51,7 +55,7 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         super.viewDidLoad()
         createLineChart()
         StartStop.setTitle("Start", for: UIControl.State.normal)
-        listStorage()
+        listStorage(ref: storage.reference().child("flowCalc/ChartData"))
         
         // Add long press gesture
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
@@ -77,14 +81,15 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
     override func viewDidDisappear(_ animated: Bool) {
-        weightData.removeAll()
+        clearCharts()
         
         
     }
     
-    func listStorage(){
-        let storage = Storage.storage()
-        let storageReference = storage.reference().child("flowCalc/ChartData")
+    //MARK: List Storage
+    func listStorage(ref: StorageReference){
+        let storageReference = ref
+        
         storageReference.listAll { (result, error) in
             if let error = error {
                 // Handle the error
@@ -95,17 +100,65 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                     let folderName = prefix.fullPath.components(separatedBy: "/").last!
                     print(folderName)
                     self.folderList.append(folderName)
+                    self.folderPath.append(prefix)
                     self.numberOfRowsInSideTable = self.folderList.count
                 }
                 // Iterate over the items (files)
-                for item in result!.items {
-                    let itemName = item.fullPath.components(separatedBy: "/").last!
+                for itempath in result!.items {
+                    let fullItemName = itempath.fullPath.components(separatedBy: "/").last!
+                    let itemName = fullItemName.components(separatedBy: "-")[2...].joined(separator: "-")
                     print(itemName)
+//                    self.CSVpath.append(itempath)
+//                    self.CSVname.append(itemName)
+                    let CsvRef = itempath
+                    let FileName =  fullItemName
+                    //print(itemName)
+                    let DocumentDirURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+                    let FileURL = DocumentDirURL.appendingPathComponent(FileName)
+                    CsvRef.write(toFile: FileURL)
+                    
+                    let stream = InputStream(url: FileURL)!
+                    
+                    let csv = try! CSVReader(stream: stream)
+                    while let row = csv.next() {
+                        //sleep(1)
+                       // print("row: ",row.last)
+                        let x = String(row.first ?? "0")
+                        let y = String(row.last ?? "0")
+                        self.CsvToChart(tp:String(itemName),dx: Double(x) ?? 0,dy: Double(y) ?? 0 ) //
+                    }
                 }
             }
         }
     }
-
+    
+    func uploadCSV(timestamp: String,weightCSV: URL, flowCSV: URL){
+        let folderName = "\(timestamp)-ChartData"
+        
+        let weightStorageRef = uploadRef.child("flowCalc/ChartData/\(folderName)/\(timestamp)-WeightData.csv")
+        _ = weightStorageRef.putFile(from: weightCSV)
+        
+        let flowStorageRef = uploadRef.child("flowCalc/ChartData/\(folderName)/\(timestamp)-SmoothedFlowData.csv")
+        _ = flowStorageRef.putFile(from: flowCSV)
+    }
+    
+    // load saved chart and update display
+    func CsvToChart(tp: String,dx: Double, dy: Double){
+        
+        if tp == "SmoothedFlowData.csv" {
+            print("Fx: ",dx )
+            print("Fy: ",dy )
+            smoothedFlowData.append(ChartDataEntry(x: dx, y: dy))
+        } else if tp == "WeightData.csv" {
+            print("Wx: ",dx)
+            print("Wy: ",dy)
+            weightData.append(ChartDataEntry(x: dx, y: dy))
+        }
+        updateChart(wdata: weightData, fdata: smoothedFlowData)
+        
+    }
+    
+    
 
 
     @objc func handleLongPress(gesture: UILongPressGestureRecognizer){
@@ -215,7 +268,11 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.view.viewWithTag(menuViewTag)?.removeFromSuperview()
         self.view.viewWithTag(sideTableViewTag)?.removeFromSuperview()
         if tableView == sideTableView {
-            print(folderList[indexPath.row], "has been pressed")
+            let selectedFolder = folderPath[indexPath.row]
+            clearCharts()
+            //MARK: Download
+            
+            listStorage(ref: selectedFolder)
             self.view.viewWithTag(sideTableViewTag)?.removeFromSuperview()
             return
         }
@@ -315,6 +372,8 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         yAxis.labelPosition = .insideChart
     }
     
+   
+    
     //MARK: Fill data into chart
     //set line style
     func updateChart(wdata: [ChartDataEntry],fdata: [ChartDataEntry] ) {
@@ -368,7 +427,7 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     
     
-    
+    //MARK: Save CSV to device
     func createCSV(){
         do {
             
@@ -408,15 +467,11 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    func uploadCSV(timestamp: String,weightCSV: URL, flowCSV: URL){
-        let folderName = "\(timestamp)-ChartData"
-        
-        let weightStorageRef = uploadRef.child("flowCalc/ChartData/\(folderName)/\(timestamp)-WeightData.csv")
-        let weightUploadTask = weightStorageRef.putFile(from: weightCSV)
-        
-        let flowStorageRef = uploadRef.child("flowCalc/ChartData/\(folderName)/\(timestamp)-SmoothedFlowData.csv")
-        let flowUploadTask = flowStorageRef.putFile(from: flowCSV)
+    func clearCharts(){
+        smoothedFlowData.removeAll()
+        weightData.removeAll()
     }
+    
     
 }
 
