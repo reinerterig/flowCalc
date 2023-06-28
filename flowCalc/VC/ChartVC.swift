@@ -16,6 +16,8 @@ import FirebaseStorage
 class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var weightData: [ChartDataEntry] = []
     var smoothedFlowData: [ChartDataEntry] = []
+    var loadedWeightData: [ChartDataEntry] = []
+    var loadedSmoothedFlowData: [ChartDataEntry] = []
     var smoothedFlowRate: Double = 0
     var timer: Timer!
     var count: Double = 0
@@ -26,11 +28,17 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var chartMode: Bool = false
     var isRunning: Bool = false
     let uploadRef = Storage.storage().reference()
+    var tableViewHeight: CGFloat!
     var menuView: UIView!
+    var initialTouchPoint = CGPoint.zero
+    var sideTableView: UITableView!
     let numberOfRowsInMenu: Int = 3
     let menuViewTag: Int = 100  // Arbitrary number, just make sure it's unique in your view hierarchy
+    let sideTableViewTag: Int = 101  // Arbitrary number, just make sure it's unique in your view hierarchy
+    var numberOfRowsInSideTable: Int = 20  // This can be any number you want
+    var folderList: [String] = []
     
-        
+    
     
     @IBOutlet weak var StartStop: UIButton!
     
@@ -43,16 +51,20 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         super.viewDidLoad()
         createLineChart()
         StartStop.setTitle("Start", for: UIControl.State.normal)
+        listStorage()
         
         // Add long press gesture
-                let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
         longPressGesture.minimumPressDuration = 0.2 // Long press duration of one second
-                self.view.addGestureRecognizer(longPressGesture)
+        self.view.addGestureRecognizer(longPressGesture)
+        
+        
+        
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
-      
+        
     }
     
     
@@ -70,60 +82,143 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
     }
     
+    func listStorage(){
+        let storage = Storage.storage()
+        let storageReference = storage.reference().child("flowCalc/ChartData")
+        storageReference.listAll { (result, error) in
+            if let error = error {
+                // Handle the error
+                print("Error: \(error)")
+            } else {
+                // Iterate over the prefixes (folders)
+                for prefix in result!.prefixes {
+                    let folderName = prefix.fullPath.components(separatedBy: "/").last!
+                    print(folderName)
+                    self.folderList.append(folderName)
+                    self.numberOfRowsInSideTable = self.folderList.count
+                }
+                // Iterate over the items (files)
+                for item in result!.items {
+                    let itemName = item.fullPath.components(separatedBy: "/").last!
+                    print(itemName)
+                }
+            }
+        }
+    }
+
+
+
     @objc func handleLongPress(gesture: UILongPressGestureRecognizer){
-           if gesture.state == .began {
-               // Remove any existing menu view
-               self.view.viewWithTag(menuViewTag)?.removeFromSuperview()
-
-               // Calculate the height of the table view
-               let rowHeight: CGFloat = 44.0
-               let tableViewHeight: CGFloat = rowHeight * CGFloat(numberOfRowsInMenu)
-
-               // Get the location of the long press
-               let longPressLocation = gesture.location(in: self.view)
-
-               // Create the subview
-               let menuView = UIView()
-               menuView.frame = CGRect(x: longPressLocation.x, y: longPressLocation.y, width: 200, height: tableViewHeight)
-               menuView.backgroundColor = .white
-               menuView.tag = menuViewTag  // Set the tag
-
-               let tableView = UITableView()
-               tableView.frame = menuView.bounds
-               tableView.dataSource = self
-               tableView.delegate = self
-               tableView.rowHeight = rowHeight
-               tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-                   
-               menuView.addSubview(tableView)
-               self.view.addSubview(menuView)
-           }
-       }
-
+        initialTouchPoint = gesture.location(in: view)
+        if gesture.state == .began {
+            // Remove any existing menu view
+            self.view.viewWithTag(menuViewTag)?.removeFromSuperview()
+            self.view.viewWithTag(sideTableViewTag)?.removeFromSuperview()
+            
+            // Calculate the height of the table view
+            let rowHeight: CGFloat = 44.0
+            tableViewHeight = rowHeight * CGFloat(numberOfRowsInMenu)
+            
+            // Get the location of the long press
+            let longPressLocation = gesture.location(in: self.view)
+            
+            // Create the subview
+            let menuView = UIView()
+            menuView.frame = CGRect(x: longPressLocation.x, y: longPressLocation.y, width: 200, height: tableViewHeight)
+            menuView.backgroundColor = .white
+            menuView.tag = menuViewTag  // Set the tag
+            
+            let tableView = UITableView()
+            tableView.frame = menuView.bounds
+            tableView.dataSource = self
+            tableView.delegate = self
+            tableView.rowHeight = rowHeight
+            tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+            
+            menuView.addSubview(tableView)
+            self.view.addSubview(menuView)
+        }
+    }
+    
+    
+    
+    func createSideTableView() {
+        // Remove any existing side table view
+        self.view.viewWithTag(sideTableViewTag)?.removeFromSuperview()
+        
+        // Create the subview
+        let sideView = UIView()
+        sideView.frame = CGRect(x: self.view.bounds.midX, y: 0, width: self.view.bounds.midX, height: self.view.bounds.height)
+        sideView.backgroundColor = .white
+        sideView.tag = sideTableViewTag  // Set the tag
+        
+        // Create the table view
+        sideTableView = UITableView()
+        sideTableView.frame = sideView.bounds
+        sideTableView.dataSource = self
+        sideTableView.delegate = self
+        sideTableView.rowHeight = 44.0
+        sideTableView.register(UITableViewCell.self, forCellReuseIdentifier: "sideCell")
+        
+        // Add the table view to the subview
+        sideView.addSubview(sideTableView)
+        
+        // Add the subview to the main view
+        self.view.addSubview(sideView)
+        
+        // Animate the view onto the screen from the right
+        sideView.frame.origin.x = self.view.bounds.width
+        UIView.animate(withDuration: 0.25) {
+            sideView.frame.origin.x = self.view.bounds.midX
+        }
+    }
+    
+    
     
     // UITableViewDataSource methods
-        func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return 3
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if tableView == sideTableView {
+            return numberOfRowsInSideTable
         }
-        
-        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-            switch indexPath.row {
-            case 0:
-                cell.textLabel?.text = "Upload"
-            case 1:
-                cell.textLabel?.text = "Toggle"
-            case 2:
-                cell.textLabel?.text = "Saved Charts"
-            default:
-                break
+        return 3
+    }
+    
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if tableView == sideTableView {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "sideCell", for: indexPath)
+            if indexPath.row < folderList.count {
+                cell.textLabel?.text = folderList[indexPath.row]
+            } else {
+                cell.textLabel?.text = "Row \(indexPath.row)"  // Fallback, just in case
             }
             return cell
         }
-        
-        // UITableViewDelegate method
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        switch indexPath.row {
+        case 0:
+            cell.textLabel?.text = "Upload"
+        case 1:
+            cell.textLabel?.text = "Toggle"
+        case 2:
+            cell.textLabel?.text = "Saved Charts"
+        default:
+            break
+        }
+        return cell
+    }
+    
+    
+    // UITableViewDelegate method
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        self.view.viewWithTag(menuViewTag)?.removeFromSuperview()
+        self.view.viewWithTag(sideTableViewTag)?.removeFromSuperview()
+        if tableView == sideTableView {
+            print(folderList[indexPath.row], "has been pressed")
+            self.view.viewWithTag(sideTableViewTag)?.removeFromSuperview()
+            return
+        }
         switch indexPath.row {
         case 0:
             //Upload
@@ -138,13 +233,14 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 self.updateChart(wdata: self.weightData, fdata: self.smoothedFlowData)
             }
         case 2:
+            createSideTableView()
             print("Start / Stop Pressed")
         default:
             break
         }
         self.view.viewWithTag(menuViewTag)?.removeFromSuperview()
     }
-
+    
     
     func createTimer(){
         timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(counter), userInfo: nil, repeats: true)
@@ -153,7 +249,7 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     @objc func counter(){
-       //counts up in miliseconds and formats the count to a "clock" time
+        //counts up in miliseconds and formats the count to a "clock" time
         count += 0.1
         let minutes = Int(count) / 60 % 60
         let seconds = Int(count) % 60
@@ -171,10 +267,10 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         // every tick append update the chart with new time and smoothed flow entry
         let smoothedFlowDataEntry = ChartDataEntry(x: Double(m_s) ?? 0, y: smoothedFlowRate)
-            self.smoothedFlowData.append(smoothedFlowDataEntry)
+        self.smoothedFlowData.append(smoothedFlowDataEntry)
         
         self.updateChart(wdata: self.weightData, fdata: self.smoothedFlowData)
-       
+        
     }
     
     //MARK: Smooth Flow
@@ -188,16 +284,16 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let smoothedFlowArray: [Double]
         
         if flowArray.count <= windowSize {
-                smoothedFlowArray = flowArray
-          } else {
-              let startIndex = flowArray.count - windowSize
-              let endIndex = flowArray.count
-              smoothedFlowArray = Array(flowArray[startIndex..<endIndex])
-          }
+            smoothedFlowArray = flowArray
+        } else {
+            let startIndex = flowArray.count - windowSize
+            let endIndex = flowArray.count
+            smoothedFlowArray = Array(flowArray[startIndex..<endIndex])
+        }
         
-           smoothedFlowRate = smoothedFlowArray.reduce(0, { x, y in x + y }) / Double(smoothedFlowArray.count)
+        smoothedFlowRate = smoothedFlowArray.reduce(0, { x, y in x + y }) / Double(smoothedFlowArray.count)
         print("flow: ", flowWeight, " Smoothed: ", smoothedFlowRate)
-            oldtWeight = newWeight
+        oldtWeight = newWeight
     }
     
     
@@ -210,7 +306,7 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         NSLayoutConstraint.activate([
             lineChart.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             lineChart.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            ])
+        ])
         
         
         let yAxis = lineChart.leftAxis
@@ -218,28 +314,28 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         lineChart.rightAxis.enabled = false
         yAxis.labelPosition = .insideChart
     }
-
-//MARK: Fill data into chart
-//set line style
+    
+    //MARK: Fill data into chart
+    //set line style
     func updateChart(wdata: [ChartDataEntry],fdata: [ChartDataEntry] ) {
-            let wDataSet = LineChartDataSet(entries: wdata, label: "Espresso Weight")
-            let wData = LineChartData(dataSet: wDataSet)
+        let wDataSet = LineChartDataSet(entries: wdata, label: "Espresso Weight")
+        let wData = LineChartData(dataSet: wDataSet)
         
-            let fDataSet = LineChartDataSet(entries: fdata, label: "Espresso flow")
-            let fData = LineChartData(dataSet: fDataSet)
-
-            // Customize the line chart here if you want.
-            // For example:
-            wDataSet.colors = [UIColor.red]
-            wDataSet.circleColors = [UIColor.red]
-            wDataSet.drawCirclesEnabled = false
-            wDataSet.mode = .cubicBezier
+        let fDataSet = LineChartDataSet(entries: fdata, label: "Espresso flow")
+        let fData = LineChartData(dataSet: fDataSet)
+        
+        // Customize the line chart here if you want.
+        // For example:
+        wDataSet.colors = [UIColor.red]
+        wDataSet.circleColors = [UIColor.red]
+        wDataSet.drawCirclesEnabled = false
+        wDataSet.mode = .cubicBezier
         // could all of this be cleaner?
-            fDataSet.colors = [UIColor.blue]
-            fDataSet.circleColors = [UIColor.red]
-            fDataSet.drawCirclesEnabled = false
-            fDataSet.mode = .cubicBezier
-            
+        fDataSet.colors = [UIColor.blue]
+        fDataSet.circleColors = [UIColor.red]
+        fDataSet.drawCirclesEnabled = false
+        fDataSet.mode = .cubicBezier
+        
         if chartMode == true{
             lineChart.data = wData
             wData.setDrawValues(false)
@@ -311,7 +407,7 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             print("Error creating CSV files: \(error)")
         }
     }
-
+    
     func uploadCSV(timestamp: String,weightCSV: URL, flowCSV: URL){
         let folderName = "\(timestamp)-ChartData"
         
@@ -321,6 +417,11 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let flowStorageRef = uploadRef.child("flowCalc/ChartData/\(folderName)/\(timestamp)-SmoothedFlowData.csv")
         let flowUploadTask = flowStorageRef.putFile(from: flowCSV)
     }
-
+    
 }
+
+
+
+
+
 
