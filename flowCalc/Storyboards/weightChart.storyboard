@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <device id="retina6_12" orientation="landscape" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -11,15 +11,17 @@
         <!--ChartVC-->
         <scene sceneID="s0d-6b-0kx">
             <objects>
-                <viewController storyboardIdentifier="ChartVC" id="Y6W-OH-hqX" customClass="ChartVC" customModule="flowCalc" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ChartVC" modalTransitionStyle="crossDissolve" id="Y6W-OH-hqX" customClass="ChartVC" customModule="flowCalc" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="852" height="393"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H7h-Ag-DeD">
-                                <rect key="frame" x="166.66666666666666" y="783" width="59.666666666666657" height="35"/>
+                                <rect key="frame" x="713" y="314" width="89.666666666666629" height="58"/>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="gray" title="Stop"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Stop" buttonSize="large">
+                                    <fontDescription key="titleFontDescription" name="Helvetica" family="Helvetica" pointSize="24"/>
+                                </buttonConfiguration>
                                 <connections>
                                     <action selector="onBtnStop:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="vu7-J6-4Um"/>
                                 </connections>
@@ -32,32 +34,28 @@
                         </accessibility>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="H7h-Ag-DeD" firstAttribute="bottom" secondItem="vDu-zF-Fre" secondAttribute="bottom" id="Psu-nY-TWi"/>
-                            <constraint firstItem="H7h-Ag-DeD" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="SOT-Vf-L7V"/>
+                            <constraint firstItem="H7h-Ag-DeD" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="654" id="O8f-oa-3kG"/>
+                            <constraint firstItem="H7h-Ag-DeD" firstAttribute="bottom" secondItem="vDu-zF-Fre" secondAttribute="bottom" id="rPD-3e-CR3"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="StartStop" destination="H7h-Ag-DeD" id="epT-Sl-cgt"/>
+                        <segue destination="ryG-5u-c17" kind="presentation" identifier="toScaleConnect" id="0lG-TP-6EC"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="57.251908396946561" y="-2.1126760563380285"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="RjY-sI-B7Z">
+        <!--connectScaleVC-->
+        <scene sceneID="Szy-20-DnT">
             <objects>
-                <viewController id="mhy-vj-Mr1" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="qD5-JQ-Mpl">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="mol-wD-SbO"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ePt-CB-TYl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <viewControllerPlaceholder storyboardName="Main" referencedIdentifier="connectScaleVC" id="ryG-5u-c17" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="mKl-5Y-oSW"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ck1-4z-Tvc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="827" y="-2"/>
+            <point key="canvasLocation" x="589" y="-3"/>
         </scene>
     </scenes>
     <resources>

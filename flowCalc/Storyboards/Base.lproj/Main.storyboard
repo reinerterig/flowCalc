@@ -20,35 +20,11 @@
                     </view>
                     <navigationItem key="navigationItem" id="Vpg-vr-kZN">
                         <nil key="title"/>
-                        <barButtonItem key="leftBarButtonItem" id="prZ-CS-sFo">
-                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="OLO-49-CZ2" userLabel="Log in">
-                                <rect key="frame" x="15.999999999999996" y="5" width="49.666666666666657" height="34.333333333333336"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" image="apple.logo" catalog="system"/>
-                            </button>
-                        </barButtonItem>
-                        <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="ELa-fU-4vw">
-                            <rect key="frame" x="166" y="5" width="61.333333333333343" height="34.333333333333336"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <state key="normal" title="Button"/>
-                            <buttonConfiguration key="configuration" style="gray" title="Start"/>
-                            <connections>
-                                <segue destination="ham-PO-5KW" kind="show" id="Sjh-Ji-gJP"/>
-                            </connections>
-                        </button>
-                        <barButtonItem key="rightBarButtonItem" id="GK2-x7-odP">
-                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="mym-av-KfN" userLabel="Connect Scale">
-                                <rect key="frame" x="327.33333333333331" y="5" width="49.666666666666686" height="34.333333333333336"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" image="wifi.circle.fill" catalog="system"/>
-                                <connections>
-                                    <segue destination="x5X-jK-Bpe" kind="show" id="hW8-uJ-BDd"/>
-                                </connections>
-                            </button>
-                        </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <segue destination="x5X-jK-Bpe" kind="show" identifier="segueConnectToScaleVC" id="zgD-Ol-u6O"/>
+                        <segue destination="ham-PO-5KW" kind="presentation" identifier="segueChartVC" modalPresentationStyle="fullScreen" id="5Tm-5y-Exe"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
@@ -62,12 +38,12 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3Fu-Wg-kcW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1460" y="-385"/>
+            <point key="canvasLocation" x="934" y="425"/>
         </scene>
         <!--Connect To ScaleVC-->
         <scene sceneID="FXp-0j-c2p">
             <objects>
-                <tableViewController id="x5X-jK-Bpe" customClass="connectToScaleVC" customModule="flowCalc" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="connectScaleVC" id="x5X-jK-Bpe" customClass="connectToScaleVC" customModule="flowCalc" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="5wP-FJ-O7a">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -104,6 +80,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="IrD-1X-J9l"/>
+                    <connections>
+                        <segue destination="u8W-bL-q2j" kind="show" identifier="toPreShotData" id="ruA-kZ-Kdp"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="et8-sQ-h2S" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -127,10 +106,18 @@
             </objects>
             <point key="canvasLocation" x="6.8702290076335872" y="3.5211267605633805"/>
         </scene>
+        <!--PreShotData-->
+        <scene sceneID="SC8-XE-mEk">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="PreShotData" storyboardName="PreShotData" referencedIdentifier="PreShotData" id="u8W-bL-q2j" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="Nct-9A-Gwt"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cpu-ve-ahM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1821" y="425"/>
+        </scene>
     </scenes>
     <resources>
-        <image name="apple.logo" catalog="system" width="105" height="128"/>
-        <image name="wifi.circle.fill" catalog="system" width="128" height="123"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

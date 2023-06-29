@@ -21,12 +21,24 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         AcaiaManager.shared().enableBackgroundRecovery = true
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        nextVC()
         _addAcaiaEventsObserver()
             }
+    
+    
+   func nextVC(){
+//       if AcaiaManager.shared().connectedScale != nil{
+           performSegue(withIdentifier: "segueChartVC", sender: self)
+//       } else {
+//           performSegue(withIdentifier: "segueConnectToScaleVC", sender: self)
+//       }
+        
+    }
     
     
 }

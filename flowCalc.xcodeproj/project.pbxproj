@@ -17,6 +17,12 @@
 		481555562A4947A800A099FB /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 481555552A4947A800A099FB /* FirebaseFirestore */; };
 		481555582A4947A800A099FB /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 481555572A4947A800A099FB /* FirebaseFirestoreSwift */; };
 		4815555A2A4947A800A099FB /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 481555592A4947A800A099FB /* FirebaseStorage */; };
+		4847E9782A4CE6860003AAA9 /* TampCam.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4847E9772A4CE6860003AAA9 /* TampCam.storyboard */; };
+		4847E97A2A4CE6AE0003AAA9 /* shotDataVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4847E9792A4CE6AE0003AAA9 /* shotDataVC.swift */; };
+		4847E97C2A4CED8E0003AAA9 /* TampCamVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4847E97B2A4CED8E0003AAA9 /* TampCamVC.swift */; };
+		4847E97E2A4D23A20003AAA9 /* PreShotData.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4847E97D2A4D23A20003AAA9 /* PreShotData.storyboard */; };
+		4847E9822A4D24000003AAA9 /* PreShotDataVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4847E9812A4D24000003AAA9 /* PreShotDataVC.swift */; };
+		4847E9842A4D4E5C0003AAA9 /* Shared Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4847E9832A4D4E5C0003AAA9 /* Shared Data.swift */; };
 		48A6C5342A467A3300A53D93 /* DGCharts in Frameworks */ = {isa = PBXBuildFile; productRef = 48A6C5332A467A3300A53D93 /* DGCharts */; };
 		48A6C5372A46916100A53D93 /* TinyConstraints in Frameworks */ = {isa = PBXBuildFile; productRef = 48A6C5362A46916100A53D93 /* TinyConstraints */; };
 		48A6C53A2A48011600A53D93 /* CSV in Frameworks */ = {isa = PBXBuildFile; productRef = 48A6C5392A48011600A53D93 /* CSV */; };
@@ -37,6 +43,12 @@
 		481233F32A454F8E00CD1251 /* weightChart.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = weightChart.storyboard; sourceTree = "<group>"; };
 		481233F52A454FAA00CD1251 /* ChartVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartVC.swift; sourceTree = "<group>"; };
 		481555452A492F4800A099FB /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4847E9772A4CE6860003AAA9 /* TampCam.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TampCam.storyboard; sourceTree = "<group>"; };
+		4847E9792A4CE6AE0003AAA9 /* shotDataVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = shotDataVC.swift; sourceTree = "<group>"; };
+		4847E97B2A4CED8E0003AAA9 /* TampCamVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TampCamVC.swift; sourceTree = "<group>"; };
+		4847E97D2A4D23A20003AAA9 /* PreShotData.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = PreShotData.storyboard; sourceTree = "<group>"; };
+		4847E9812A4D24000003AAA9 /* PreShotDataVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreShotDataVC.swift; sourceTree = "<group>"; };
+		4847E9832A4D4E5C0003AAA9 /* Shared Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared Data.swift"; sourceTree = "<group>"; };
 		48A6C53B2A480CDD00A53D93 /* flowCalc.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = flowCalc.entitlements; sourceTree = "<group>"; };
 		48C9B5D62A4164DC0065000D /* flowCalc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = flowCalc.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48C9B5D92A4164DC0065000D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -83,6 +95,8 @@
 				48C9B5DF2A4164DD0065000D /* Main.storyboard */,
 				48C9B5E42A4164DE0065000D /* LaunchScreen.storyboard */,
 				481233F32A454F8E00CD1251 /* weightChart.storyboard */,
+				4847E9772A4CE6860003AAA9 /* TampCam.storyboard */,
+				4847E97D2A4D23A20003AAA9 /* PreShotData.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -93,6 +107,10 @@
 				48C9B5DD2A4164DD0065000D /* ViewController.swift */,
 				48C9B5F62A4165F70065000D /* connectToScaleVC.swift */,
 				481233F52A454FAA00CD1251 /* ChartVC.swift */,
+				4847E9792A4CE6AE0003AAA9 /* shotDataVC.swift */,
+				4847E97B2A4CED8E0003AAA9 /* TampCamVC.swift */,
+				4847E9812A4D24000003AAA9 /* PreShotDataVC.swift */,
+				4847E9832A4D4E5C0003AAA9 /* Shared Data.swift */,
 			);
 			path = VC;
 			sourceTree = "<group>";
@@ -225,6 +243,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4847E97E2A4D23A20003AAA9 /* PreShotData.storyboard in Resources */,
+				4847E9782A4CE6860003AAA9 /* TampCam.storyboard in Resources */,
 				48C9B5E62A4164DE0065000D /* LaunchScreen.storyboard in Resources */,
 				48C9B5E32A4164DE0065000D /* Assets.xcassets in Resources */,
 				481555462A492F4800A099FB /* GoogleService-Info.plist in Resources */,
@@ -241,9 +261,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				48C9B5DE2A4164DD0065000D /* ViewController.swift in Sources */,
+				4847E97C2A4CED8E0003AAA9 /* TampCamVC.swift in Sources */,
 				481233F62A454FAA00CD1251 /* ChartVC.swift in Sources */,
+				4847E9842A4D4E5C0003AAA9 /* Shared Data.swift in Sources */,
 				48C9B5DA2A4164DC0065000D /* AppDelegate.swift in Sources */,
 				48C9B5DC2A4164DD0065000D /* SceneDelegate.swift in Sources */,
+				4847E97A2A4CE6AE0003AAA9 /* shotDataVC.swift in Sources */,
+				4847E9822A4D24000003AAA9 /* PreShotDataVC.swift in Sources */,
 				48C9B5F72A4165F70065000D /* connectToScaleVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

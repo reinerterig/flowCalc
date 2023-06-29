@@ -1,69 +1,242 @@
-//
-//  ChartVC.swift
-//  flowCalc
-//
-//  Created by reinert wasserman on 23/6/2023.
-//
 
 import UIKit
 import AcaiaSDK
 import SwiftUI
 import DGCharts
 import TinyConstraints
-
-class ChartVC: UIViewController {
-    var data: [ChartDataEntry] = []
+import CSV
+import FirebaseStorage
+class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    var weightData: [ChartDataEntry] = []
+    var smoothedFlowData: [ChartDataEntry] = []
+    var smoothedFlowRate: Double = 0
     var timer: Timer!
     var count: Double = 0
-    var timeInDouble: Double = 0
+    var newWeight: Double = Double(scaleWeight)!
+    var oldtWeight: Double = 0
+    var flowWeight: Double = 0
+    var flowArray: [Double] = []
+    var chartMode: Bool = false
+    var isRunning: Bool = false
+    let uploadRef = Storage.storage().reference()
+    var tableViewHeight: CGFloat!
+    var menuView: UIView!
+    var initialTouchPoint = CGPoint.zero
+    var sideTableView: UITableView!
+    let numberOfRowsInMenu: Int = 3
+    let menuViewTag: Int = 100 hierarchy
+    let sideTableViewTag: Int = 101  hierarchy
+    var numberOfRowsInSideTable: Int = 20
+    let storage = Storage.storage()
+    var folderList: [String] = []
+    var folderPath: [StorageReference] = []
+    var CSVpath: [StorageReference] = []
+    var CSVname: [String] = []
+    @IBOutlet weak var StartStop: UIButton!
     lazy var lineChart: LineChartView = {
         let chartView = LineChartView()
         return chartView
     }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         createLineChart()
+        StartStop.setTitle("Start", for: UIControl.State.normal)
+        listStorage(ref: storage.reference().child("flowCalc/ChartData"))
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        longPressGesture.minimumPressDuration = 0.2 // Long press duration of one second
+        self.view.addGestureRecognizer(longPressGesture)
     }
-    
     override func viewWillAppear(_ animated: Bool) {
-        if AcaiaManager.shared().connectedScale != nil{
-            createTimer()
-            print("Timer Started")
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        if isRunning == true {
+            timer?.invalidate()
+            timer = nil
         }
     }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-                timer?.invalidate()
-                timer = nil
-            print("Timer Stopped")
-    }
     override func viewDidDisappear(_ animated: Bool) {
-        data.removeAll()
+        clearCharts()
     }
- 
-    
+    func listStorage(ref: StorageReference){
+        let storageReference = ref
+        storageReference.listAll { (result, error) in
+            if let error = error {
+            } else {
+                for prefix in result!.prefixes {
+                    let folderName = prefix.fullPath.components(separatedBy: "/").last!
+                    print(folderName)
+                    self.folderList.append(folderName)
+                    self.folderPath.append(prefix)
+                    self.numberOfRowsInSideTable = self.folderList.count
+                }
+                for itempath in result!.items {
+                    let fullItemName = itempath.fullPath.components(separatedBy: "/").last!
+                    let itemName = fullItemName.components(separatedBy: "-")[2...].joined(separator: "-")
+                    let CsvRef = itempath
+                    let FileName =  fullItemName
+                    let DocumentDirURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+                    let FileURL = DocumentDirURL.appendingPathComponent(FileName)
+                    CsvRef.write(toFile: FileURL)
+                    let stream = InputStream(url: FileURL)!
+                    let csv = try! CSVReader(stream: stream)
+                    while let row = csv.next() {
+                        let x = String(row.first ?? "0")
+                        let y = String(row.last ?? "0")
+                        self.CsvToChart(tp:String(itemName),dx: Double(x) ?? 0,dy: Double(y) ?? 0 )
+                    }
+                }
+            }
+        }
+    }
+    func uploadCSV(timestamp: String,weightCSV: URL, flowCSV: URL){
+        let folderName = "\(timestamp)-ChartData"
+        let weightStorageRef = uploadRef.child("flowCalc/ChartData/\(folderName)/\(timestamp)-WeightData.csv")
+        _ = weightStorageRef.putFile(from: weightCSV)
+        let flowStorageRef = uploadRef.child("flowCalc/ChartData/\(folderName)/\(timestamp)-SmoothedFlowData.csv")
+        _ = flowStorageRef.putFile(from: flowCSV)
+    }
+    func CsvToChart(tp: String,dx: Double, dy: Double){
+        if tp == "SmoothedFlowData.csv" {
+            smoothedFlowData.append(ChartDataEntry(x: dx, y: dy))
+        } else if tp == "WeightData.csv" {
+            weightData.append(ChartDataEntry(x: dx, y: dy))
+        }
+        updateChart(wdata: weightData, fdata: smoothedFlowData)
+    }
+    @objc func handleLongPress(gesture: UILongPressGestureRecognizer){
+        initialTouchPoint = gesture.location(in: view)
+        if gesture.state == .began {
+            self.view.viewWithTag(menuViewTag)?.removeFromSuperview()
+            self.view.viewWithTag(sideTableViewTag)?.removeFromSuperview()
+            let rowHeight: CGFloat = 44.0
+            tableViewHeight = rowHeight * CGFloat(numberOfRowsInMenu)
+            let longPressLocation = gesture.location(in: self.view)
+            let menuView = UIView()
+            menuView.frame = CGRect(x: longPressLocation.x, y: longPressLocation.y, width: 200, height: tableViewHeight)
+            menuView.backgroundColor = .white
+            menuView.tag = menuViewTag  // Set the tag
+            let tableView = UITableView()
+            tableView.frame = menuView.bounds
+            tableView.dataSource = self
+            tableView.delegate = self
+            tableView.rowHeight = rowHeight
+            tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+            menuView.addSubview(tableView)
+            self.view.addSubview(menuView)
+        }
+    }
+    func createSideTableView() {
+        self.view.viewWithTag(sideTableViewTag)?.removeFromSuperview()
+        let sideView = UIView()
+        sideView.frame = CGRect(x: self.view.bounds.midX, y: 0, width: self.view.bounds.midX, height: self.view.bounds.height)
+        sideView.backgroundColor = .white
+        sideView.tag = sideTableViewTag  
+        sideTableView = UITableView()
+        sideTableView.frame = sideView.bounds
+        sideTableView.dataSource = self
+        sideTableView.delegate = self
+        sideTableView.rowHeight = 44.0
+        sideTableView.register(UITableViewCell.self, forCellReuseIdentifier: "sideCell")
+        sideView.addSubview(sideTableView)
+        self.view.addSubview(sideView)
+        sideView.frame.origin.x = self.view.bounds.width
+        UIView.animate(withDuration: 0.25) {
+            sideView.frame.origin.x = self.view.bounds.midX
+        }
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if tableView == sideTableView {
+            return numberOfRowsInSideTable
+        }
+        return 3
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if tableView == sideTableView {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "sideCell", for: indexPath)
+            if indexPath.row < folderList.count {
+                cell.textLabel?.text = folderList[indexPath.row]
+            } else {
+                cell.textLabel?.text = "Row \(indexPath.row)"
+            }
+            return cell
+        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        switch indexPath.row {
+        case 0:
+            cell.textLabel?.text = "Upload"
+        case 1:
+            cell.textLabel?.text = "Toggle"
+        case 2:
+            cell.textLabel?.text = "Saved Charts"
+        default:
+            break
+        }
+        return cell
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        self.view.viewWithTag(menuViewTag)?.removeFromSuperview()
+        self.view.viewWithTag(sideTableViewTag)?.removeFromSuperview()
+        if tableView == sideTableView {
+            let selectedFolder = folderPath[indexPath.row]
+            clearCharts()
+            listStorage(ref: selectedFolder)
+            self.view.viewWithTag(sideTableViewTag)?.removeFromSuperview()
+            return
+        }
+        switch indexPath.row {
+        case 0:
+            createCSV()
+        case 1:
+            if chartMode == true {
+                chartMode = false
+                self.updateChart(wdata: self.weightData, fdata: self.smoothedFlowData)
+            } else {
+                chartMode = true
+                self.updateChart(wdata: self.weightData, fdata: self.smoothedFlowData)
+            }
+        case 2:
+            createSideTableView()
+        default:
+            break
+        }
+        self.view.viewWithTag(menuViewTag)?.removeFromSuperview()
+    }
     func createTimer(){
         timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(counter), userInfo: nil, repeats: true)
-        
+        isRunning = true
     }
-    
     @objc func counter(){
-       
+        //counts up in miliseconds and formats the count to a "clock" time
         count += 0.1
         let minutes = Int(count) / 60 % 60
         let seconds = Int(count) % 60
         let mil = Int(count*10) % 10
-        //print(mil)
         let m_s = String(format:"%02i.%02i%01i", minutes, seconds,mil)
-        timeInDouble = Double(m_s) ?? 0
-        let flowRate = Double.random(in: 1...10)
-        let entry = ChartDataEntry(x: timeInDouble, y: Double(scaleWeight) ?? 0)
-        self.data.append(entry)
-        self.updateChart(data: self.data)
+        let weightDataEntry = ChartDataEntry(x: Double(m_s) ?? 0, y: Double(scaleWeight) ?? 0)
+        self.weightData.append(weightDataEntry)
+        createFlowChart()
+        let smoothedFlowDataEntry = ChartDataEntry(x: Double(m_s) ?? 0, y: smoothedFlowRate)
+        self.smoothedFlowData.append(smoothedFlowDataEntry)
+        self.updateChart(wdata: self.weightData, fdata: self.smoothedFlowData)
     }
-    
-    //MARK: create linechart set chart style
+    func createFlowChart(){
+        newWeight = Double(scaleWeight) ?? 0
+        flowWeight = newWeight - oldtWeight
+        flowArray.append(flowWeight)
+        let windowSize = 10
+        let smoothedFlowArray: [Double]
+        if flowArray.count <= windowSize {
+            smoothedFlowArray = flowArray
+        } else {
+            let startIndex = flowArray.count - windowSize
+            let endIndex = flowArray.count
+            smoothedFlowArray = Array(flowArray[startIndex..<endIndex])
+        }
+        smoothedFlowRate = smoothedFlowArray.reduce(0, { x, y in x + y }) / Double(smoothedFlowArray.count)
+        print("flow: ", flowWeight, " Smoothed: ", smoothedFlowRate)
+        oldtWeight = newWeight
+    }
     func createLineChart(){
         view.addSubview(lineChart)
         lineChart.translatesAutoresizingMaskIntoConstraints = false
@@ -71,29 +244,82 @@ class ChartVC: UIViewController {
         NSLayoutConstraint.activate([
             lineChart.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             lineChart.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            ])
-        
-        
+        ])
         let yAxis = lineChart.leftAxis
         lineChart.backgroundColor = UIColor.systemRed.withAlphaComponent(0.1)
         lineChart.rightAxis.enabled = false
         yAxis.labelPosition = .insideChart
     }
-
-//MARK: fill data set line style
-    func updateChart(data: [ChartDataEntry]) {
-            let dataSet = LineChartDataSet(entries: data, label: "Espresso Shot Flow Rate")
-            let data = LineChartData(dataSet: dataSet)
-
-            // Customize the line chart here if you want.
-            // For example:
-            dataSet.colors = [UIColor.red]
-            dataSet.circleColors = [UIColor.red]
-            dataSet.drawCirclesEnabled = false
-            dataSet.mode = .cubicBezier
-            
-            lineChart.data = data
-            data.setDrawValues(false)
+    func updateChart(wdata: [ChartDataEntry],fdata: [ChartDataEntry] ) {
+        let wDataSet = LineChartDataSet(entries: wdata, label: "Espresso Weight")
+        let wData = LineChartData(dataSet: wDataSet)
+        let fDataSet = LineChartDataSet(entries: fdata, label: "Espresso flow")
+        let fData = LineChartData(dataSet: fDataSet)
+        wDataSet.colors = [UIColor.red]
+        wDataSet.circleColors = [UIColor.red]
+        wDataSet.drawCirclesEnabled = false
+        wDataSet.mode = .cubicBezier
+        // could all of this be cleaner?
+        fDataSet.colors = [UIColor.blue]
+        fDataSet.circleColors = [UIColor.red]
+        fDataSet.drawCirclesEnabled = false
+        fDataSet.mode = .cubicBezier
+        if chartMode == true{
+            lineChart.data = wData
+            wData.setDrawValues(false)
+            lineChart.setNeedsDisplay()
+        } else if chartMode == false{
+            lineChart.data = fData
+            fData.setDrawValues(false)
+            lineChart.setNeedsDisplay()
         }
-}
+    }
+    @IBAction func onBtnStop(_ sender: UIButton) {
+        if isRunning == true {
+            timer?.invalidate()
+            timer = nil
+            StartStop.setTitle("Stop", for: UIControl.State.normal)
+            isRunning = false
+            print("Timer Stopped")
+        } else if isRunning == false && AcaiaManager.shared().connectedScale != nil{
+            createTimer()
+            isRunning = true
+            print("Timer Started")
+            StartStop.setTitle("Start", for: UIControl.State.normal)
+        }
+    }
+    func createCSV(){
+        do {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyyMMdd-HHmm"
+            let timestamp = formatter.string(from: Date())
+            let weightFileName = "\(timestamp)-WeightData"
+            let weightDocumentDirURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            let weightFileURL = weightDocumentDirURL.appendingPathComponent(weightFileName).appendingPathExtension("csv")
+            let weightStream = OutputStream(url: weightFileURL, append: false)!
+            let weightCSVWriter = try CSVWriter(stream: weightStream)
+            for data in weightData {
+                try weightCSVWriter.write(row: ["\(data.x)", "\(data.y)"])
+            }
+            weightCSVWriter.stream.close()
+            let flowFileName = "\(timestamp)-SmoothedFlowData"
+            let flowDocumentDirURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            let flowFileURL = flowDocumentDirURL.appendingPathComponent(flowFileName).appendingPathExtension("csv")
+            let flowStream = OutputStream(url: flowFileURL, append: false)!
+            let flowCSVWriter = try CSVWriter(stream: flowStream)
+            for data in smoothedFlowData {
+                try flowCSVWriter.write(row: ["\(data.x)", "\(data.y)"])
+            }
+            flowCSVWriter.stream.close()
+            // Upload CSVs
+            uploadCSV(timestamp: timestamp,weightCSV: weightFileURL, flowCSV: flowFileURL)
+        } catch {
+            print("Error creating CSV files: \(error)")
+        }
+    }
+    func clearCharts(){
+        smoothedFlowData.removeAll()
+        weightData.removeAll()
+    }
 
+}

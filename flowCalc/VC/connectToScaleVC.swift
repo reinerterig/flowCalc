@@ -120,6 +120,7 @@ class connectToScaleVC: UITableViewController {
        _timerForConnectTimeOut = nil
   
        navigationController?.popViewController(animated: true)
+       performSegue(withIdentifier: "toPreShotData", sender: self)
    }
     
     @objc private func _didFinishScan(notification: NSNotification) {

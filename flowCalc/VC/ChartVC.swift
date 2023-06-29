@@ -13,11 +13,11 @@ import TinyConstraints
 import CSV
 import FirebaseStorage
 
-class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
+
+
+class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,ChartViewDelegate {
     var weightData: [ChartDataEntry] = []
     var smoothedFlowData: [ChartDataEntry] = []
-    var loadedWeightData: [ChartDataEntry] = []
-    var loadedSmoothedFlowData: [ChartDataEntry] = []
     var smoothedFlowRate: Double = 0
     var timer: Timer!
     var count: Double = 0
@@ -41,6 +41,12 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var folderPath: [StorageReference] = []
     var CSVpath: [StorageReference] = []
     var CSVname: [String] = []
+    var receivedImage: UIImage?
+    var dose: String = String(Recipy.pre.dose  ?? 0)
+    var grindSize:String = String(Recipy.pre.grindSize ?? 0)
+    var rpm: String = String(Recipy.pre.rpm  ?? 0)
+    var preWet:String = String(Recipy.pre.preWet ?? false)
+    
     
     
     
@@ -53,6 +59,8 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.overrideUserInterfaceStyle = .dark
         createLineChart()
         StartStop.setTitle("Start", for: UIControl.State.normal)
         listStorage(ref: storage.reference().child("flowCalc/ChartData"))
@@ -61,13 +69,13 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
         longPressGesture.minimumPressDuration = 0.2 // Long press duration of one second
         self.view.addGestureRecognizer(longPressGesture)
-        
-        
-        
-        
     }
     
+    
     override func viewWillAppear(_ animated: Bool) {
+        
+        let delegate = UIApplication.shared.delegate as! AppDelegate
+        delegate.orientationLock = .landscape
         
     }
     
@@ -79,10 +87,12 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             timer = nil
             print("Timer Stopped")
         }
+        
     }
     override func viewDidDisappear(_ animated: Bool) {
         clearCharts()
-        
+        let delegate = UIApplication.shared.delegate as! AppDelegate
+        delegate.orientationLock = .all
         
     }
     
@@ -98,7 +108,7 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 // Iterate over the prefixes (folders)
                 for prefix in result!.prefixes {
                     let folderName = prefix.fullPath.components(separatedBy: "/").last!
-                    print(folderName)
+                    
                     self.folderList.append(folderName)
                     self.folderPath.append(prefix)
                     self.numberOfRowsInSideTable = self.folderList.count
@@ -107,33 +117,100 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 for itempath in result!.items {
                     let fullItemName = itempath.fullPath.components(separatedBy: "/").last!
                     let itemName = fullItemName.components(separatedBy: "-")[2...].joined(separator: "-")
-                    print(itemName)
-//                    self.CSVpath.append(itempath)
-//                    self.CSVname.append(itemName)
-                    let CsvRef = itempath
-                    let FileName =  fullItemName
-                    //print(itemName)
-                    let DocumentDirURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-                    let FileURL = DocumentDirURL.appendingPathComponent(FileName)
-                    CsvRef.write(toFile: FileURL)
                     
-                    let stream = InputStream(url: FileURL)!
                     
-                    let csv = try! CSVReader(stream: stream)
-                    while let row = csv.next() {
-                        //sleep(1)
-                       // print("row: ",row.last)
-                        let x = String(row.first ?? "0")
-                        let y = String(row.last ?? "0")
-                        self.CsvToChart(tp:String(itemName),dx: Double(x) ?? 0,dy: Double(y) ?? 0 ) //
+                    switch String(itemName){
+                    case "SmoothedFlowData.csv", "WeightData.csv","preShotData.csv":
+                        
+                        let CsvRef = itempath
+                        let FileName =  fullItemName
+                        
+                        let DocumentDirURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+                        let FileURL = DocumentDirURL.appendingPathComponent(FileName)
+                        CsvRef.write(toFile: FileURL){ url, error in
+                            if let error = error {
+                                
+                            } else {
+                            }
+                        }
+                        
+                        let fileManager = FileManager.default
+                        
+                        if fileManager.fileExists(atPath: FileURL.path) {
+                            print(itemName, ": File was created successfully")
+                        } else {
+                            print(itemName, ": Failed to create the file")
+                        }
+                        
+                        
+                        let stream = InputStream(url: FileURL)!
+                        
+                        
+                        let csv = try! CSVReader(stream: stream)
+                        
+                        switch String(itemName){
+                        case "SmoothedFlowData.csv", "WeightData.csv":
+                            
+                            while let row = csv.next() {
+                                
+                                let x = String(row.first ?? "0")
+                                let y = String(row.last ?? "0")
+                                
+                                self.CsvToChart(tp:String(itemName),dx: Double(x) ?? 0,dy: Double(y) ?? 0 )
+                                
+                            }
+                        case "preShotData.csv":
+                            while let row = csv.next() {
+                                switch row.first {
+                                case "dose":
+                                    Recipy.pre.dose = Double(row.last!)
+                                case "grindSize":
+                                    Recipy.pre.grindSize = Double(row.last!)
+                                case "rpm":
+                                    Recipy.pre.rpm = Double(row.last!)
+                                case "preWet":
+                                    Recipy.pre.preWet = Bool(row.last!)
+                                default:
+                                    return
+                                }
+                            }
+                            
+                        default:
+                            return
+                        }
+                    case "Tamp.jpg":
+                        print("")
+                        itempath.getData(maxSize: 1 * 1024 * 1024) { data, error in
+                            if let error = error {
+                              // Uh-oh, an error occurred!
+                            } else {
+                              // Data for "images/island.jpg" is returned
+                              let receivedImage = UIImage(data: data!)
+                            }
+                          }
+                    default:
+                        return
                     }
                 }
             }
         }
     }
-    
-    func uploadCSV(timestamp: String,weightCSV: URL, flowCSV: URL){
+    //MARK: Upload
+    func uploadCSV(timestamp: String,weightCSV: URL, flowCSV: URL, preShotCSV: URL){
         let folderName = "\(timestamp)-ChartData"
+        if receivedImage != nil {
+            let imgRef = uploadRef.child("flowCalc/ChartData/\(folderName)/\(timestamp)-Tamp.jpg")
+            let imgData = receivedImage!.jpegData(compressionQuality: 0.8)
+            
+            let uploadImg = imgRef.putData(imgData!) { metadata, error in
+                if error == nil && metadata != nil {
+                    
+                }
+            }
+        }
+        
+        let preShotStorageRef = uploadRef.child("flowCalc/ChartData/\(folderName)/\(timestamp)-preShotData.csv")
+        _ = preShotStorageRef.putFile(from: preShotCSV)
         
         let weightStorageRef = uploadRef.child("flowCalc/ChartData/\(folderName)/\(timestamp)-WeightData.csv")
         _ = weightStorageRef.putFile(from: weightCSV)
@@ -146,12 +223,10 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func CsvToChart(tp: String,dx: Double, dy: Double){
         
         if tp == "SmoothedFlowData.csv" {
-            print("Fx: ",dx )
-            print("Fy: ",dy )
+            
             smoothedFlowData.append(ChartDataEntry(x: dx, y: dy))
         } else if tp == "WeightData.csv" {
-            print("Wx: ",dx)
-            print("Wy: ",dy)
+            
             weightData.append(ChartDataEntry(x: dx, y: dy))
         }
         updateChart(wdata: weightData, fdata: smoothedFlowData)
@@ -159,8 +234,8 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     
-
-
+    
+    
     @objc func handleLongPress(gesture: UILongPressGestureRecognizer){
         initialTouchPoint = gesture.location(in: view)
         if gesture.state == .began {
@@ -337,7 +412,7 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         flowWeight = newWeight - oldtWeight
         flowArray.append(flowWeight)
         
-        let windowSize = 10
+        let windowSize = 20
         let smoothedFlowArray: [Double]
         
         if flowArray.count <= windowSize {
@@ -349,7 +424,7 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
         
         smoothedFlowRate = smoothedFlowArray.reduce(0, { x, y in x + y }) / Double(smoothedFlowArray.count)
-        print("flow: ", flowWeight, " Smoothed: ", smoothedFlowRate)
+        
         oldtWeight = newWeight
     }
     
@@ -358,21 +433,24 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     //set chart style
     func createLineChart(){
         view.addSubview(lineChart)
+        
         lineChart.translatesAutoresizingMaskIntoConstraints = false
         lineChart.centerInSuperview()
         NSLayoutConstraint.activate([
-            lineChart.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            lineChart.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            lineChart.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            lineChart.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10),
+            lineChart.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
+            lineChart.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10)
         ])
         
         
         let yAxis = lineChart.leftAxis
-        lineChart.backgroundColor = UIColor.systemRed.withAlphaComponent(0.1)
         lineChart.rightAxis.enabled = false
         yAxis.labelPosition = .insideChart
+        view.bringSubviewToFront(StartStop)
     }
     
-   
+    
     
     //MARK: Fill data into chart
     //set line style
@@ -383,17 +461,27 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let fDataSet = LineChartDataSet(entries: fdata, label: "Espresso flow")
         let fData = LineChartData(dataSet: fDataSet)
         
+        
         // Customize the line chart here if you want.
         // For example:
         wDataSet.colors = [UIColor.red]
         wDataSet.circleColors = [UIColor.red]
         wDataSet.drawCirclesEnabled = false
         wDataSet.mode = .cubicBezier
+        wDataSet.lineWidth = 2.5
+        wDataSet.fill = ColorFill(color: .systemMint)
+        //        wDataSet.fillAlpha = 0.2
+        
         // could all of this be cleaner?
         fDataSet.colors = [UIColor.blue]
         fDataSet.circleColors = [UIColor.red]
         fDataSet.drawCirclesEnabled = false
         fDataSet.mode = .cubicBezier
+        //        fDataSet.setColor(.systemMint)
+        fDataSet.lineWidth = 2.5
+        fDataSet.fill = ColorFill(color: .systemMint)
+        fDataSet.fillAlpha = 0.2
+        fDataSet.drawFilledEnabled = true
         
         if chartMode == true{
             lineChart.data = wData
@@ -406,25 +494,32 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    
-    // Start and pause timer
-    @IBAction func onBtnStop(_ sender: UIButton) {
-        if isRunning == true {
-            timer?.invalidate()
-            timer = nil
-            StartStop.setTitle("Stop", for: UIControl.State.normal)
-            isRunning = false
-            print("Timer Stopped")
-            
-        } else if isRunning == false && AcaiaManager.shared().connectedScale != nil{
-            createTimer()
-            isRunning = true
-            print("Timer Started")
-            StartStop.setTitle("Start", for: UIControl.State.normal)
-        }
+    func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {
+        print(entry)
     }
     
     
+    // Start and pause timer
+    @IBAction func onBtnStop(_ sender: UIButton) {
+        if AcaiaManager.shared().connectedScale != nil{
+            if isRunning == true {
+                timer?.invalidate()
+                timer = nil
+                StartStop.setTitle("Stop", for: UIControl.State.normal)
+                isRunning = false
+                print("Timer Stopped")
+                
+            } else if isRunning == false && AcaiaManager.shared().connectedScale != nil{
+                createTimer()
+                isRunning = true
+                print("Timer Started")
+                StartStop.setTitle("Start", for: UIControl.State.normal)
+            }
+        } else {
+            performSegue(withIdentifier: "toScaleConnect", sender: self)
+        }
+        
+    }
     
     
     //MARK: Save CSV to device
@@ -435,6 +530,21 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyyMMdd-HHmm"
             let timestamp = formatter.string(from: Date())
+            
+            // pre shot
+            let preShotFileName = "\(timestamp)-preRecipie"
+            let preShotDocumentDirURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            let preShotFileURL = preShotDocumentDirURL.appendingPathComponent(preShotFileName).appendingPathExtension("csv")
+            
+            let preShotStream = OutputStream(url: preShotFileURL, append: false)!
+            let preShotcsv = try! CSVWriter(stream: preShotStream)
+            
+            try! preShotcsv.write(row: ["dose"   , String(dose)])
+            try! preShotcsv.write(row: ["grindSize"   , String(grindSize)])
+            try! preShotcsv.write(row: ["rpm"   , String(rpm)])
+            try! preShotcsv.write(row: ["preWet"   , String(preWet)])
+            
+            preShotcsv.stream.close()
             
             // Weight Data
             let weightFileName = "\(timestamp)-WeightData"
@@ -461,7 +571,7 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             flowCSVWriter.stream.close()
             
             // Upload CSVs
-            uploadCSV(timestamp: timestamp,weightCSV: weightFileURL, flowCSV: flowFileURL)
+            uploadCSV(timestamp: timestamp,weightCSV: weightFileURL, flowCSV: flowFileURL, preShotCSV: preShotFileURL)
         } catch {
             print("Error creating CSV files: \(error)")
         }
