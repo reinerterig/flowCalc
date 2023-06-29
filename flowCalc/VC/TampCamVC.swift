@@ -7,9 +7,11 @@
 
 import UIKit
 
+var tampImage: UIImage?
+
 class TampCamVC: UIViewController {
     
-    var tampImage: UIImage?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,14 +57,14 @@ extension TampCamVC: UIImagePickerControllerDelegate, UINavigationControllerDele
         tampImage = image
        }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        print("Preparing Seque")
-        if segue.identifier == "imageToChart",
-           let destinationVC = segue.destination as? ChartVC,
-           let senderVC = sender as? TampCamVC {
-            destinationVC.receivedImage = senderVC.tampImage
-        }
-    }
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        print("Preparing Seque")
+//        if segue.identifier == "imageToChart",
+//           let destinationVC = segue.destination as? ChartVC,
+//           let senderVC = sender as? TampCamVC {
+//            destinationVC.receivedImage = tampImage
+//        }
+//    }
 
 }
 

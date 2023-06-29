@@ -12,6 +12,13 @@ class Recipy {
     var grindSize   : Double?
     var rpm         : Double?
     var preWet      : Bool?
+    
+    static let post = Recipy()
+    var body: Double?
+    var aciduty: Double?
+    var sweetness: Double?
+    var bitterness: Double?
+    var rating: Double?
 
     private init() { }
 }

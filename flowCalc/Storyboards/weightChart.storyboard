@@ -41,6 +41,7 @@
                     <connections>
                         <outlet property="StartStop" destination="H7h-Ag-DeD" id="epT-Sl-cgt"/>
                         <segue destination="ryG-5u-c17" kind="presentation" identifier="toScaleConnect" id="0lG-TP-6EC"/>
+                        <segue destination="pu4-x9-Skf" kind="show" identifier="toPostShot" id="WfK-PG-jmm"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -55,7 +56,17 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ck1-4z-Tvc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="589" y="-3"/>
+            <point key="canvasLocation" x="634" y="-38"/>
+        </scene>
+        <!--PostShotVC-->
+        <scene sceneID="gMJ-o7-YOY">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="PostShotVC" storyboardName="PostShotData" referencedIdentifier="PostShotVC" id="pu4-x9-Skf" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="46d-Y5-1wG"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="CMf-Zl-112" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="624" y="64"/>
         </scene>
     </scenes>
     <resources>

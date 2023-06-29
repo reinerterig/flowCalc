@@ -47,9 +47,7 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,Char
     var rpm: String = String(Recipy.pre.rpm  ?? 0)
     var preWet:String = String(Recipy.pre.preWet ?? false)
     
-    
-    
-    
+
     @IBOutlet weak var StartStop: UIButton!
     
     lazy var lineChart: LineChartView = {
@@ -82,15 +80,9 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,Char
     
     
     override func viewWillDisappear(_ animated: Bool) {
-        if isRunning == true {
-            timer?.invalidate()
-            timer = nil
-            print("Timer Stopped")
-        }
         
     }
     override func viewDidDisappear(_ animated: Bool) {
-        clearCharts()
         let delegate = UIApplication.shared.delegate as! AppDelegate
         delegate.orientationLock = .all
         
@@ -198,13 +190,14 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,Char
     //MARK: Upload
     func uploadCSV(timestamp: String,weightCSV: URL, flowCSV: URL, preShotCSV: URL){
         let folderName = "\(timestamp)-ChartData"
-        if receivedImage != nil {
+        if tampImage != nil {
+            print("No actually...I exist")
             let imgRef = uploadRef.child("flowCalc/ChartData/\(folderName)/\(timestamp)-Tamp.jpg")
-            let imgData = receivedImage!.jpegData(compressionQuality: 0.8)
+            let imgData = tampImage!.jpegData(compressionQuality: 0.8)
             
             let uploadImg = imgRef.putData(imgData!) { metadata, error in
                 if error == nil && metadata != nil {
-                    
+                    print("You've got immage")
                 }
             }
         }
@@ -344,7 +337,7 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,Char
         self.view.viewWithTag(sideTableViewTag)?.removeFromSuperview()
         if tableView == sideTableView {
             let selectedFolder = folderPath[indexPath.row]
-            clearCharts()
+            
             //MARK: Download
             
             listStorage(ref: selectedFolder)
@@ -379,6 +372,7 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,Char
         isRunning = true
         
     }
+
     
     @objc func counter(){
         //counts up in miliseconds and formats the count to a "clock" time
@@ -501,25 +495,28 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,Char
     
     // Start and pause timer
     @IBAction func onBtnStop(_ sender: UIButton) {
-        if AcaiaManager.shared().connectedScale != nil{
-            if isRunning == true {
-                timer?.invalidate()
-                timer = nil
-                StartStop.setTitle("Stop", for: UIControl.State.normal)
-                isRunning = false
-                print("Timer Stopped")
-                
-            } else if isRunning == false && AcaiaManager.shared().connectedScale != nil{
+        switch AcaiaManager.shared().connectedScale {
+        case nil:
+            performSegue(withIdentifier: "toScaleConnect", sender: self)
+        case .some(_):
+            switch timer {
+            case nil:
                 createTimer()
                 isRunning = true
                 print("Timer Started")
+                StartStop.setTitle("Stop", for: UIControl.State.normal)
+            case .some(_):
+                
+                timer?.invalidate()
+                timer = nil
                 StartStop.setTitle("Start", for: UIControl.State.normal)
+                isRunning = false
+                print("Timer Stopped")
+                performSegue(withIdentifier: "toPostShot", sender: self)
             }
-        } else {
-            performSegue(withIdentifier: "toScaleConnect", sender: self)
         }
-        
     }
+
     
     
     //MARK: Save CSV to device
@@ -577,10 +574,17 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,Char
         }
     }
     
-    func clearCharts(){
-        smoothedFlowData.removeAll()
-        weightData.removeAll()
-    }
+   public func Finish(){
+       createCSV()
+       AcaiaManager.shared().connectedScale?.disconnect()
+       //receivedImage = nil
+       smoothedFlowData.removeAll()
+       weightData.removeAll()
+       if timer != nil {
+           timer?.invalidate()
+           timer = nil
+       }
+   }
     
     
 }

@@ -23,6 +23,8 @@
 		4847E97E2A4D23A20003AAA9 /* PreShotData.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4847E97D2A4D23A20003AAA9 /* PreShotData.storyboard */; };
 		4847E9822A4D24000003AAA9 /* PreShotDataVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4847E9812A4D24000003AAA9 /* PreShotDataVC.swift */; };
 		4847E9842A4D4E5C0003AAA9 /* Shared Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4847E9832A4D4E5C0003AAA9 /* Shared Data.swift */; };
+		4847E9862A4D8F160003AAA9 /* PostShotData.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4847E9852A4D8F160003AAA9 /* PostShotData.storyboard */; };
+		4847E9882A4D909B0003AAA9 /* PostShotVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4847E9872A4D909B0003AAA9 /* PostShotVC.swift */; };
 		48A6C5342A467A3300A53D93 /* DGCharts in Frameworks */ = {isa = PBXBuildFile; productRef = 48A6C5332A467A3300A53D93 /* DGCharts */; };
 		48A6C5372A46916100A53D93 /* TinyConstraints in Frameworks */ = {isa = PBXBuildFile; productRef = 48A6C5362A46916100A53D93 /* TinyConstraints */; };
 		48A6C53A2A48011600A53D93 /* CSV in Frameworks */ = {isa = PBXBuildFile; productRef = 48A6C5392A48011600A53D93 /* CSV */; };
@@ -49,6 +51,8 @@
 		4847E97D2A4D23A20003AAA9 /* PreShotData.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = PreShotData.storyboard; sourceTree = "<group>"; };
 		4847E9812A4D24000003AAA9 /* PreShotDataVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreShotDataVC.swift; sourceTree = "<group>"; };
 		4847E9832A4D4E5C0003AAA9 /* Shared Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared Data.swift"; sourceTree = "<group>"; };
+		4847E9852A4D8F160003AAA9 /* PostShotData.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = PostShotData.storyboard; sourceTree = "<group>"; };
+		4847E9872A4D909B0003AAA9 /* PostShotVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostShotVC.swift; sourceTree = "<group>"; };
 		48A6C53B2A480CDD00A53D93 /* flowCalc.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = flowCalc.entitlements; sourceTree = "<group>"; };
 		48C9B5D62A4164DC0065000D /* flowCalc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = flowCalc.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48C9B5D92A4164DC0065000D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -97,6 +101,7 @@
 				481233F32A454F8E00CD1251 /* weightChart.storyboard */,
 				4847E9772A4CE6860003AAA9 /* TampCam.storyboard */,
 				4847E97D2A4D23A20003AAA9 /* PreShotData.storyboard */,
+				4847E9852A4D8F160003AAA9 /* PostShotData.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -111,6 +116,7 @@
 				4847E97B2A4CED8E0003AAA9 /* TampCamVC.swift */,
 				4847E9812A4D24000003AAA9 /* PreShotDataVC.swift */,
 				4847E9832A4D4E5C0003AAA9 /* Shared Data.swift */,
+				4847E9872A4D909B0003AAA9 /* PostShotVC.swift */,
 			);
 			path = VC;
 			sourceTree = "<group>";
@@ -247,6 +253,7 @@
 				4847E9782A4CE6860003AAA9 /* TampCam.storyboard in Resources */,
 				48C9B5E62A4164DE0065000D /* LaunchScreen.storyboard in Resources */,
 				48C9B5E32A4164DE0065000D /* Assets.xcassets in Resources */,
+				4847E9862A4D8F160003AAA9 /* PostShotData.storyboard in Resources */,
 				481555462A492F4800A099FB /* GoogleService-Info.plist in Resources */,
 				48C9B5E12A4164DD0065000D /* Main.storyboard in Resources */,
 				481233F42A454F8E00CD1251 /* weightChart.storyboard in Resources */,
@@ -260,6 +267,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4847E9882A4D909B0003AAA9 /* PostShotVC.swift in Sources */,
 				48C9B5DE2A4164DD0065000D /* ViewController.swift in Sources */,
 				4847E97C2A4CED8E0003AAA9 /* TampCamVC.swift in Sources */,
 				481233F62A454FAA00CD1251 /* ChartVC.swift in Sources */,
