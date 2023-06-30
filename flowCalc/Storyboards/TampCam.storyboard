@@ -20,7 +20,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="xda-PE-NJK"/>
                     <connections>
-                        <segue destination="zem-qP-Plj" kind="show" identifier="imageToChart" id="cfi-yW-2kX"/>
+                        <segue destination="zem-qP-Plj" kind="modal" identifier="imageToChart" id="cfi-yW-2kX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Y8d-fy-lXx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

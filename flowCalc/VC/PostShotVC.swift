@@ -25,41 +25,47 @@ class PostShotVC: UIViewController {
         setupSlider(ratingSlider, forValue: Recipy.post.rating)
         
         // Set up the labels
-        updateLabel(bodyLabel, withValue: bodySlider.value)
-        updateLabel(acidutyLabel, withValue: acidutySlider.value)
-        updateLabel(sweetnessLabel, withValue: sweetnessSlider.value)
-        updateLabel(bitternessLabel, withValue: bitternessSlider.value)
-        updateLabel(ratingLabel, withValue: ratingSlider.value)
+            updateLabel(bodyLabel, withValue: bodySlider.value, name: "Body")
+            updateLabel(acidutyLabel, withValue: acidutySlider.value, name: "Acidity")
+            updateLabel(sweetnessLabel, withValue: sweetnessSlider.value, name: "Sweetness")
+            updateLabel(bitternessLabel, withValue: bitternessSlider.value, name: "Bitterness")
+            updateLabel(ratingLabel, withValue: ratingSlider.value, name: "Rating")
     }
 
    
     @IBAction func sliderChanged(_ sender: Any) {
         guard let slider = sender as? UISlider else { return }
-        let value = Double(slider.value)
-        let label: UILabel
-        
-        switch slider {
-        case bodySlider:
-            Recipy.post.body = value
-            label = bodyLabel
-        case acidutySlider:
-            Recipy.post.aciduty = value
-            label = acidutyLabel
-        case sweetnessSlider:
-            Recipy.post.sweetness = value
-            label = sweetnessLabel
-        case bitternessSlider:
-            Recipy.post.bitterness = value
-            label = bitternessLabel
-        case ratingSlider:
-            Recipy.post.rating = value
-            label = ratingLabel
-        default:
-            return
+            let value = Double(slider.value)
+            let label: UILabel
+            let parameterName: String
+            
+            switch slider {
+            case bodySlider:
+                Recipy.post.body = value
+                label = bodyLabel
+                parameterName = "Body"
+            case acidutySlider:
+                Recipy.post.aciduty = value
+                label = acidutyLabel
+                parameterName = "Acidity"
+            case sweetnessSlider:
+                Recipy.post.sweetness = value
+                label = sweetnessLabel
+                parameterName = "Sweetness"
+            case bitternessSlider:
+                Recipy.post.bitterness = value
+                label = bitternessLabel
+                parameterName = "Bitterness"
+            case ratingSlider:
+                Recipy.post.rating = value
+                label = ratingLabel
+                parameterName = "Rating"
+            default:
+                return
+            }
+            
+            updateLabel(label, withValue: slider.value, name: parameterName)
         }
-        
-        updateLabel(label, withValue: slider.value)
-    }
     
     private func setupSlider(_ slider: UISlider, forValue value: Double?) {
         slider.minimumValue = 1
@@ -82,9 +88,10 @@ class PostShotVC: UIViewController {
         }
     }
     
-    private func updateLabel(_ label: UILabel, withValue value: Float) {
-        label.text = String(format: "%.1f", value)
+    private func updateLabel(_ label: UILabel, withValue value: Float, name: String) {
+        label.text = "\(name): \(String(format: "%.1f", value))"
     }
+
 }
 
 

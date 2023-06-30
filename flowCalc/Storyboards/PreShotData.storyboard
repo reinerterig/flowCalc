@@ -107,7 +107,7 @@
                         <outlet property="grindSizePicker" destination="UaN-17-rE5" id="jr1-Zd-kqa"/>
                         <outlet property="preWetSwitch" destination="r0I-cH-fvf" id="Skj-43-bKh"/>
                         <outlet property="rpmPicker" destination="L3i-4h-r2m" id="8CS-Ft-Xte"/>
-                        <segue destination="cGl-U4-MOy" kind="show" identifier="toTampCam" id="Opd-iB-Kx6"/>
+                        <segue destination="cGl-U4-MOy" kind="presentation" identifier="toTampCam" id="Opd-iB-Kx6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

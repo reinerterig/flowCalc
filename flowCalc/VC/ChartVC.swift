@@ -16,8 +16,6 @@ import FirebaseStorage
 
 
 class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,ChartViewDelegate {
-    var weightData: [ChartDataEntry] = []
-    var smoothedFlowData: [ChartDataEntry] = []
     var smoothedFlowRate: Double = 0
     var timer: Timer!
     var count: Double = 0
@@ -42,10 +40,15 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,Char
     var CSVpath: [StorageReference] = []
     var CSVname: [String] = []
     var receivedImage: UIImage?
-    var dose: String = String(Recipy.pre.dose  ?? 0)
-    var grindSize:String = String(Recipy.pre.grindSize ?? 0)
-    var rpm: String = String(Recipy.pre.rpm  ?? 0)
-    var preWet:String = String(Recipy.pre.preWet ?? false)
+    var dose: String      = String(Recipy.pre.dose  ?? 0)
+    var grindSize:String  = String(Recipy.pre.grindSize ?? 0)
+    var rpm: String       = String(Recipy.pre.rpm  ?? 0)
+    var preWet:String     = String(Recipy.pre.preWet ?? false)
+    var body: String      = String(Recipy.post.body ?? 0)
+    var Acidity: String   = String(Recipy.post.aciduty ?? 0)
+    var Sweetness: String = String(Recipy.post.sweetness ?? 0)
+    var Bitterness: String = String(Recipy.post.bitterness ?? 0)
+    var Rating: String    = String(Recipy.post.rating ?? 0)
     
 
     @IBOutlet weak var StartStop: UIButton!
@@ -91,6 +94,9 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,Char
     //MARK: List Storage
     func listStorage(ref: StorageReference){
         let storageReference = ref
+//        self.weightData.removeAll()
+//        self.smoothedFlowData.removeAll()
+        
         
         storageReference.listAll { (result, error) in
             if let error = error {
@@ -110,10 +116,10 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,Char
                     let fullItemName = itempath.fullPath.components(separatedBy: "/").last!
                     let itemName = fullItemName.components(separatedBy: "-")[2...].joined(separator: "-")
                     
-                    
+
                     switch String(itemName){
-                    case "SmoothedFlowData.csv", "WeightData.csv","preShotData.csv":
-                        
+                    case "SmoothedFlowData.csv", "WeightData.csv","preShotData.csv","postShotData.csv":
+                        print(fullItemName)
                         let CsvRef = itempath
                         let FileName =  fullItemName
                         
@@ -147,7 +153,6 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,Char
                                 
                                 let x = String(row.first ?? "0")
                                 let y = String(row.last ?? "0")
-                                
                                 self.CsvToChart(tp:String(itemName),dx: Double(x) ?? 0,dy: Double(y) ?? 0 )
                                 
                             }
@@ -162,6 +167,23 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,Char
                                     Recipy.pre.rpm = Double(row.last!)
                                 case "preWet":
                                     Recipy.pre.preWet = Bool(row.last!)
+                                default:
+                                    return
+                                }
+                            }
+                        case "postShotData.csv":
+                            while let row = csv.next() {
+                                switch row.first {
+                                case "Body":
+                                    Recipy.post.body = Double(row.last!)
+                                case "Acidity":
+                                    Recipy.post.aciduty = Double(row.last!)
+                                case "Sweetness":
+                                    Recipy.post.sweetness = Double(row.last!)
+                                case "Bitterness":
+                                    Recipy.post.bitterness = Double(row.last!)
+                                case "Rating":
+                                    Recipy.post.rating = Double(row.last!)
                                 default:
                                     return
                                 }
@@ -188,22 +210,23 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,Char
         }
     }
     //MARK: Upload
-    func uploadCSV(timestamp: String,weightCSV: URL, flowCSV: URL, preShotCSV: URL){
+    func uploadCSV(timestamp: String,weightCSV: URL, flowCSV: URL, preShotCSV: URL, postShotCSV: URL){
         let folderName = "\(timestamp)-ChartData"
         if tampImage != nil {
-            print("No actually...I exist")
             let imgRef = uploadRef.child("flowCalc/ChartData/\(folderName)/\(timestamp)-Tamp.jpg")
             let imgData = tampImage!.jpegData(compressionQuality: 0.8)
             
-            let uploadImg = imgRef.putData(imgData!) { metadata, error in
+            _ = imgRef.putData(imgData!) { metadata, error in
                 if error == nil && metadata != nil {
-                    print("You've got immage")
                 }
             }
         }
         
         let preShotStorageRef = uploadRef.child("flowCalc/ChartData/\(folderName)/\(timestamp)-preShotData.csv")
         _ = preShotStorageRef.putFile(from: preShotCSV)
+        
+        let postShotStorageRef = uploadRef.child("flowCalc/ChartData/\(folderName)/\(timestamp)-postShotData.csv")
+        _ = postShotStorageRef.putFile(from: postShotCSV)
         
         let weightStorageRef = uploadRef.child("flowCalc/ChartData/\(folderName)/\(timestamp)-WeightData.csv")
         _ = weightStorageRef.putFile(from: weightCSV)
@@ -217,12 +240,12 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,Char
         
         if tp == "SmoothedFlowData.csv" {
             
-            smoothedFlowData.append(ChartDataEntry(x: dx, y: dy))
+            ChartData.shared.smoothedFlowData.append(ChartDataEntry(x: dx, y: dy))
         } else if tp == "WeightData.csv" {
             
-            weightData.append(ChartDataEntry(x: dx, y: dy))
+            ChartData.shared.weightData.append(ChartDataEntry(x: dx, y: dy))
         }
-        updateChart(wdata: weightData, fdata: smoothedFlowData)
+        updateChart(wdata: ChartData.shared.weightData, fdata: ChartData.shared.smoothedFlowData)
         
     }
     
@@ -352,10 +375,10 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,Char
             //Toggle
             if chartMode == true {
                 chartMode = false
-                self.updateChart(wdata: self.weightData, fdata: self.smoothedFlowData)
+                self.updateChart(wdata: ChartData.shared.weightData, fdata: ChartData.shared.smoothedFlowData)
             } else {
                 chartMode = true
-                self.updateChart(wdata: self.weightData, fdata: self.smoothedFlowData)
+                self.updateChart(wdata: ChartData.shared.weightData, fdata: ChartData.shared.smoothedFlowData)
             }
         case 2:
             createSideTableView()
@@ -384,7 +407,7 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,Char
         
         // every tick append update the chart with new time and weight entry
         let weightDataEntry = ChartDataEntry(x: Double(m_s) ?? 0, y: Double(scaleWeight) ?? 0)
-        self.weightData.append(weightDataEntry)
+        ChartData.shared.weightData.append(weightDataEntry)
         
         // MARK: wight to flow
         createFlowChart()
@@ -393,9 +416,9 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,Char
         
         // every tick append update the chart with new time and smoothed flow entry
         let smoothedFlowDataEntry = ChartDataEntry(x: Double(m_s) ?? 0, y: smoothedFlowRate)
-        self.smoothedFlowData.append(smoothedFlowDataEntry)
+        ChartData.shared.smoothedFlowData.append(smoothedFlowDataEntry)
         
-        self.updateChart(wdata: self.weightData, fdata: self.smoothedFlowData)
+        self.updateChart(wdata: ChartData.shared.weightData, fdata: ChartData.shared.smoothedFlowData)
         
     }
     
@@ -506,7 +529,7 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,Char
                 print("Timer Started")
                 StartStop.setTitle("Stop", for: UIControl.State.normal)
             case .some(_):
-                
+//                createCSV()
                 timer?.invalidate()
                 timer = nil
                 StartStop.setTitle("Start", for: UIControl.State.normal)
@@ -550,7 +573,7 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,Char
             
             let weightStream = OutputStream(url: weightFileURL, append: false)!
             let weightCSVWriter = try CSVWriter(stream: weightStream)
-            for data in weightData {
+            for data in ChartData.shared.weightData {
                 try weightCSVWriter.write(row: ["\(data.x)", "\(data.y)"])
             }
             weightCSVWriter.stream.close()
@@ -562,13 +585,30 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,Char
             
             let flowStream = OutputStream(url: flowFileURL, append: false)!
             let flowCSVWriter = try CSVWriter(stream: flowStream)
-            for data in smoothedFlowData {
+            for data in ChartData.shared.smoothedFlowData {
                 try flowCSVWriter.write(row: ["\(data.x)", "\(data.y)"])
             }
             flowCSVWriter.stream.close()
             
+            
+            // pre shot
+            let postShotFileName = "\(timestamp)-preRecipie"
+            let postShotDocumentDirURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            let postShotFileURL = postShotDocumentDirURL.appendingPathComponent(postShotFileName).appendingPathExtension("csv")
+            
+            let postShotStream = OutputStream(url:  postShotFileURL, append: false)!
+            let postShotcsv = try! CSVWriter(stream: postShotStream)
+            
+            try! postShotcsv.write(row: ["Body"         , body])
+            try! postShotcsv.write(row: ["Acidity"      , Acidity])
+            try! postShotcsv.write(row: ["Sweetness"    , Sweetness])
+            try! postShotcsv.write(row: ["Bitterness"   , Bitterness])
+            try! postShotcsv.write(row: ["Rating"       , Rating])
+            
+            postShotcsv.stream.close()
+            
             // Upload CSVs
-            uploadCSV(timestamp: timestamp,weightCSV: weightFileURL, flowCSV: flowFileURL, preShotCSV: preShotFileURL)
+            uploadCSV(timestamp: timestamp,weightCSV: weightFileURL, flowCSV: flowFileURL, preShotCSV: preShotFileURL, postShotCSV: postShotFileURL)
         } catch {
             print("Error creating CSV files: \(error)")
         }
@@ -577,9 +617,8 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,Char
    public func Finish(){
        createCSV()
        AcaiaManager.shared().connectedScale?.disconnect()
-       //receivedImage = nil
-       smoothedFlowData.removeAll()
-       weightData.removeAll()
+       ChartData.shared.smoothedFlowData.removeAll()
+       ChartData.shared.weightData.removeAll()
        if timer != nil {
            timer?.invalidate()
            timer = nil

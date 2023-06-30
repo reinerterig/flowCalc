@@ -81,7 +81,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" id="IrD-1X-J9l"/>
                     <connections>
-                        <segue destination="u8W-bL-q2j" kind="show" identifier="toPreShotData" id="ruA-kZ-Kdp"/>
+                        <segue destination="u8W-bL-q2j" kind="presentation" identifier="toPreShotData" id="ruA-kZ-Kdp"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="et8-sQ-h2S" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

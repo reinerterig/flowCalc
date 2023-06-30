@@ -25,8 +25,8 @@
                                     <action selector="sliderChanged:" destination="Y6W-OH-hqX" eventType="valueChanged" id="WK9-7T-YLq"/>
                                 </connections>
                             </slider>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OZR-hb-d9C">
-                                <rect key="frame" x="116" y="61" width="42" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Body" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OZR-hb-d9C">
+                                <rect key="frame" x="115.99999999999999" y="61" width="39.333333333333329" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="ar5-bt-B5N"/>
                                 </constraints>
@@ -40,8 +40,8 @@
                                     <action selector="sliderChanged:" destination="Y6W-OH-hqX" eventType="valueChanged" id="Fk2-wL-Z0f"/>
                                 </connections>
                             </slider>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FJK-so-oz0">
-                                <rect key="frame" x="116" y="186" width="42" height="24"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sweetness" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FJK-so-oz0">
+                                <rect key="frame" x="116" y="186" width="82.666666666666686" height="24"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -52,8 +52,8 @@
                                     <action selector="sliderChanged:" destination="Y6W-OH-hqX" eventType="valueChanged" id="wUL-qJ-SNd"/>
                                 </connections>
                             </slider>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HY4-DH-D9x">
-                                <rect key="frame" x="116" y="123" width="42" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Acidity" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HY4-DH-D9x">
+                                <rect key="frame" x="116" y="123" width="52" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="anf-Nm-c4l"/>
                                 </constraints>
@@ -67,8 +67,8 @@
                                     <action selector="sliderChanged:" destination="Y6W-OH-hqX" eventType="valueChanged" id="iAe-4f-uiu"/>
                                 </connections>
                             </slider>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5TI-jI-oeG">
-                                <rect key="frame" x="116" y="253" width="42" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bitterness" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5TI-jI-oeG">
+                                <rect key="frame" x="116" y="253" width="77" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="qZz-ks-jFd"/>
                                 </constraints>
@@ -82,8 +82,8 @@
                                     <action selector="sliderChanged:" destination="Y6W-OH-hqX" eventType="valueChanged" id="GRI-Zk-nMU"/>
                                 </connections>
                             </slider>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cnu-ly-gZI">
-                                <rect key="frame" x="117" y="320" width="42" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rating" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cnu-ly-gZI">
+                                <rect key="frame" x="117.00000000000001" y="320" width="48.666666666666671" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -132,17 +132,17 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="acidutyLabel" destination="OZR-hb-d9C" id="joG-C5-qZl"/>
-                        <outlet property="acidutySlider" destination="gYi-Ia-Fop" id="ETi-Ka-50P"/>
-                        <outlet property="bitternessLabel" destination="5TI-jI-oeG" id="CDY-tB-XMt"/>
-                        <outlet property="bitternessSlider" destination="IYo-l6-oEU" id="CMX-Mq-xco"/>
-                        <outlet property="bodyLabel" destination="OZR-hb-d9C" id="Lq0-JN-kgB"/>
-                        <outlet property="bodySlider" destination="gYi-Ia-Fop" id="ZTd-Hu-QLN"/>
-                        <outlet property="ratingLabel" destination="cnu-ly-gZI" id="x2t-C6-xTf"/>
-                        <outlet property="ratingSlider" destination="IYo-l6-oEU" id="aAS-RM-K5F"/>
-                        <outlet property="sweetnessLabel" destination="FJK-so-oz0" id="Gph-aY-mwe"/>
-                        <outlet property="sweetnessSlider" destination="avV-p5-nKT" id="7Jv-ah-z5x"/>
-                        <segue destination="DoH-Hg-Fj4" kind="show" identifier="Finish" id="B1K-OX-2fE"/>
+                        <outlet property="acidutyLabel" destination="HY4-DH-D9x" id="yxa-4A-5zs"/>
+                        <outlet property="acidutySlider" destination="kLB-9t-rEM" id="nKs-qP-y21"/>
+                        <outlet property="bitternessLabel" destination="5TI-jI-oeG" id="9Fx-UO-xmg"/>
+                        <outlet property="bitternessSlider" destination="ORe-9f-jR9" id="TBP-9L-1bF"/>
+                        <outlet property="bodyLabel" destination="OZR-hb-d9C" id="Dbo-AD-16i"/>
+                        <outlet property="bodySlider" destination="gYi-Ia-Fop" id="94h-3q-ew4"/>
+                        <outlet property="ratingLabel" destination="cnu-ly-gZI" id="zG8-K5-iny"/>
+                        <outlet property="ratingSlider" destination="IYo-l6-oEU" id="CoM-sp-oZF"/>
+                        <outlet property="sweetnessLabel" destination="FJK-so-oz0" id="32t-Nd-jHa"/>
+                        <outlet property="sweetnessSlider" destination="avV-p5-nKT" id="OuL-Ia-xB5"/>
+                        <segue destination="DoH-Hg-Fj4" kind="presentation" identifier="Finish" id="B1K-OX-2fE"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

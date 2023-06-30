@@ -4,6 +4,7 @@
 //
 //  Created by reinert wasserman on 29/6/2023.
 //
+import DGCharts
 
 class Recipy {
     static let pre = Recipy()
@@ -22,3 +23,13 @@ class Recipy {
 
     private init() { }
 }
+
+class ChartData {
+    static let shared = ChartData()
+
+    var weightData: [ChartDataEntry] = []
+    var smoothedFlowData: [ChartDataEntry] = []
+
+    private init() {}
+}
+

@@ -41,7 +41,7 @@
                     <connections>
                         <outlet property="StartStop" destination="H7h-Ag-DeD" id="epT-Sl-cgt"/>
                         <segue destination="ryG-5u-c17" kind="presentation" identifier="toScaleConnect" id="0lG-TP-6EC"/>
-                        <segue destination="pu4-x9-Skf" kind="show" identifier="toPostShot" id="WfK-PG-jmm"/>
+                        <segue destination="pu4-x9-Skf" kind="presentation" identifier="toPostShot" id="WfK-PG-jmm"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
