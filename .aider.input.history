@@ -19,3 +19,6 @@
 +we are writing an app in xcode using UIKit can you update this app so in my pre shot data instead of using a picker for my dose I have a button under the lable that says set and when I press it, it chec
 +ks what my scale weight is and sets my dose 
 + equal to my scale weight 
+
+# 2023-07-04 22:17:36.876800
++go through this project. write a detailed summery on what each section does and how it can be improved to impliment multithreading 
