@@ -40,23 +40,13 @@
                     </view>
                     <connections>
                         <outlet property="StartStop" destination="H7h-Ag-DeD" id="epT-Sl-cgt"/>
-                        <segue destination="ryG-5u-c17" kind="presentation" identifier="toScaleConnect" id="0lG-TP-6EC"/>
                         <segue destination="pu4-x9-Skf" kind="presentation" identifier="toPostShot" id="WfK-PG-jmm"/>
+                        <segue destination="pgx-YM-fIi" kind="show" identifier="toConnectST" id="AVs-fv-OoF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="57.251908396946561" y="-2.1126760563380285"/>
-        </scene>
-        <!--connectScaleVC-->
-        <scene sceneID="Szy-20-DnT">
-            <objects>
-                <viewControllerPlaceholder storyboardName="Main" referencedIdentifier="connectScaleVC" id="ryG-5u-c17" sceneMemberID="viewController">
-                    <navigationItem key="navigationItem" id="mKl-5Y-oSW"/>
-                </viewControllerPlaceholder>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ck1-4z-Tvc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="634" y="-38"/>
         </scene>
         <!--PostShotVC-->
         <scene sceneID="gMJ-o7-YOY">
@@ -67,6 +57,16 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CMf-Zl-112" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="624" y="64"/>
+        </scene>
+        <!--Connect-->
+        <scene sceneID="CF2-4I-yOa">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="ConnectST" storyboardName="Connect" id="pgx-YM-fIi" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="2Ve-NU-QHp"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mbm-Qt-Ljf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="567" y="235"/>
         </scene>
     </scenes>
     <resources>

@@ -25,6 +25,10 @@
 		4847E9842A4D4E5C0003AAA9 /* Shared Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4847E9832A4D4E5C0003AAA9 /* Shared Data.swift */; };
 		4847E9862A4D8F160003AAA9 /* PostShotData.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4847E9852A4D8F160003AAA9 /* PostShotData.storyboard */; };
 		4847E9882A4D909B0003AAA9 /* PostShotVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4847E9872A4D909B0003AAA9 /* PostShotVC.swift */; };
+		487B34432A53ECC700D260B1 /* AcaiaSDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 487B34422A53ECC600D260B1 /* AcaiaSDK.xcframework */; };
+		487B344E2A53FCA100D260B1 /* Connect.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 487B344D2A53FCA100D260B1 /* Connect.storyboard */; };
+		487B34502A53FCAE00D260B1 /* ConnectVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487B344F2A53FCAE00D260B1 /* ConnectVC.swift */; };
+		48A4F0252A53CC5600D0E3CC /* BrevilleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A4F0242A53CC5600D0E3CC /* BrevilleManager.swift */; };
 		48A6C5342A467A3300A53D93 /* DGCharts in Frameworks */ = {isa = PBXBuildFile; productRef = 48A6C5332A467A3300A53D93 /* DGCharts */; };
 		48A6C5372A46916100A53D93 /* TinyConstraints in Frameworks */ = {isa = PBXBuildFile; productRef = 48A6C5362A46916100A53D93 /* TinyConstraints */; };
 		48A6C53A2A48011600A53D93 /* CSV in Frameworks */ = {isa = PBXBuildFile; productRef = 48A6C5392A48011600A53D93 /* CSV */; };
@@ -34,9 +38,7 @@
 		48C9B5E12A4164DD0065000D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 48C9B5DF2A4164DD0065000D /* Main.storyboard */; };
 		48C9B5E32A4164DE0065000D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48C9B5E22A4164DE0065000D /* Assets.xcassets */; };
 		48C9B5E62A4164DE0065000D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 48C9B5E42A4164DE0065000D /* LaunchScreen.storyboard */; };
-		48C9B5EF2A41650F0065000D /* AcaiaSDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48C9B5EE2A41650F0065000D /* AcaiaSDK.xcframework */; };
 		48C9B5F32A4165200065000D /* Charts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48C9B5F22A4165200065000D /* Charts.framework */; };
-		48C9B5F72A4165F70065000D /* connectToScaleVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C9B5F62A4165F70065000D /* connectToScaleVC.swift */; };
 		48C9B5FA2A416F450065000D /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 48C9B5F92A416F450065000D /* SnapKit */; };
 		48C9B5FE2A4170BC0065000D /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48C9B5FD2A4170BC0065000D /* SwiftUI.framework */; };
 /* End PBXBuildFile section */
@@ -53,6 +55,10 @@
 		4847E9832A4D4E5C0003AAA9 /* Shared Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shared Data.swift"; sourceTree = "<group>"; };
 		4847E9852A4D8F160003AAA9 /* PostShotData.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = PostShotData.storyboard; sourceTree = "<group>"; };
 		4847E9872A4D909B0003AAA9 /* PostShotVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostShotVC.swift; sourceTree = "<group>"; };
+		487B34422A53ECC600D260B1 /* AcaiaSDK.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = AcaiaSDK.xcframework; path = ../acaia_sdk_ios/AcaiaSDK.xcframework; sourceTree = "<group>"; };
+		487B344D2A53FCA100D260B1 /* Connect.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Connect.storyboard; sourceTree = "<group>"; };
+		487B344F2A53FCAE00D260B1 /* ConnectVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectVC.swift; sourceTree = "<group>"; };
+		48A4F0242A53CC5600D0E3CC /* BrevilleManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BrevilleManager.swift; path = "../../../brewManager/ARD Blue Test/BrevilleManager.swift"; sourceTree = "<group>"; };
 		48A6C53B2A480CDD00A53D93 /* flowCalc.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = flowCalc.entitlements; sourceTree = "<group>"; };
 		48C9B5D62A4164DC0065000D /* flowCalc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = flowCalc.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48C9B5D92A4164DC0065000D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -62,9 +68,7 @@
 		48C9B5E22A4164DE0065000D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		48C9B5E52A4164DE0065000D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		48C9B5E72A4164DE0065000D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		48C9B5EE2A41650F0065000D /* AcaiaSDK.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = AcaiaSDK.xcframework; path = ../acaia_sdk_ios/AcaiaSDK.xcframework; sourceTree = "<group>"; };
 		48C9B5F22A4165200065000D /* Charts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Charts.framework; path = System/Library/Frameworks/Charts.framework; sourceTree = SDKROOT; };
-		48C9B5F62A4165F70065000D /* connectToScaleVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = connectToScaleVC.swift; sourceTree = "<group>"; };
 		48C9B5FD2A4170BC0065000D /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -75,13 +79,13 @@
 			files = (
 				481555522A4947A800A099FB /* FirebaseDatabase in Frameworks */,
 				481555502A4947A800A099FB /* FirebaseAnalyticsSwift in Frameworks */,
+				487B34432A53ECC700D260B1 /* AcaiaSDK.xcframework in Frameworks */,
 				48C9B5FE2A4170BC0065000D /* SwiftUI.framework in Frameworks */,
 				48C9B5FA2A416F450065000D /* SnapKit in Frameworks */,
 				4815554E2A4947A800A099FB /* FirebaseAnalytics in Frameworks */,
 				481555562A4947A800A099FB /* FirebaseFirestore in Frameworks */,
 				48A6C5342A467A3300A53D93 /* DGCharts in Frameworks */,
 				481555582A4947A800A099FB /* FirebaseFirestoreSwift in Frameworks */,
-				48C9B5EF2A41650F0065000D /* AcaiaSDK.xcframework in Frameworks */,
 				48C9B5F32A4165200065000D /* Charts.framework in Frameworks */,
 				481555542A4947A800A099FB /* FirebaseDatabaseSwift in Frameworks */,
 				4815555A2A4947A800A099FB /* FirebaseStorage in Frameworks */,
@@ -100,6 +104,7 @@
 				48C9B5E42A4164DE0065000D /* LaunchScreen.storyboard */,
 				481233F32A454F8E00CD1251 /* weightChart.storyboard */,
 				4847E9772A4CE6860003AAA9 /* TampCam.storyboard */,
+				487B344D2A53FCA100D260B1 /* Connect.storyboard */,
 				4847E97D2A4D23A20003AAA9 /* PreShotData.storyboard */,
 				4847E9852A4D8F160003AAA9 /* PostShotData.storyboard */,
 			);
@@ -110,11 +115,12 @@
 			isa = PBXGroup;
 			children = (
 				48C9B5DD2A4164DD0065000D /* ViewController.swift */,
-				48C9B5F62A4165F70065000D /* connectToScaleVC.swift */,
+				48A4F0242A53CC5600D0E3CC /* BrevilleManager.swift */,
 				481233F52A454FAA00CD1251 /* ChartVC.swift */,
 				4847E9792A4CE6AE0003AAA9 /* shotDataVC.swift */,
 				4847E97B2A4CED8E0003AAA9 /* TampCamVC.swift */,
 				4847E9812A4D24000003AAA9 /* PreShotDataVC.swift */,
+				487B344F2A53FCAE00D260B1 /* ConnectVC.swift */,
 				4847E9832A4D4E5C0003AAA9 /* Shared Data.swift */,
 				4847E9872A4D909B0003AAA9 /* PostShotVC.swift */,
 			);
@@ -164,9 +170,9 @@
 		48C9B5ED2A41650F0065000D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				487B34422A53ECC600D260B1 /* AcaiaSDK.xcframework */,
 				48C9B5FD2A4170BC0065000D /* SwiftUI.framework */,
 				48C9B5F22A4165200065000D /* Charts.framework */,
-				48C9B5EE2A41650F0065000D /* AcaiaSDK.xcframework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -255,6 +261,7 @@
 				48C9B5E32A4164DE0065000D /* Assets.xcassets in Resources */,
 				4847E9862A4D8F160003AAA9 /* PostShotData.storyboard in Resources */,
 				481555462A492F4800A099FB /* GoogleService-Info.plist in Resources */,
+				487B344E2A53FCA100D260B1 /* Connect.storyboard in Resources */,
 				48C9B5E12A4164DD0065000D /* Main.storyboard in Resources */,
 				481233F42A454F8E00CD1251 /* weightChart.storyboard in Resources */,
 			);
@@ -269,6 +276,7 @@
 			files = (
 				4847E9882A4D909B0003AAA9 /* PostShotVC.swift in Sources */,
 				48C9B5DE2A4164DD0065000D /* ViewController.swift in Sources */,
+				487B34502A53FCAE00D260B1 /* ConnectVC.swift in Sources */,
 				4847E97C2A4CED8E0003AAA9 /* TampCamVC.swift in Sources */,
 				481233F62A454FAA00CD1251 /* ChartVC.swift in Sources */,
 				4847E9842A4D4E5C0003AAA9 /* Shared Data.swift in Sources */,
@@ -276,7 +284,7 @@
 				48C9B5DC2A4164DD0065000D /* SceneDelegate.swift in Sources */,
 				4847E97A2A4CE6AE0003AAA9 /* shotDataVC.swift in Sources */,
 				4847E9822A4D24000003AAA9 /* PreShotDataVC.swift in Sources */,
-				48C9B5F72A4165F70065000D /* connectToScaleVC.swift in Sources */,
+				48A4F0252A53CC5600D0E3CC /* BrevilleManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

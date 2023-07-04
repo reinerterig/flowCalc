@@ -118,11 +118,13 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,Char
                     
 
                     switch String(itemName){
-                    case "SmoothedFlowData.csv", "WeightData.csv","preShotData.csv","postShotData.csv":
+                    case "SmoothedFlowData.csv", "WeightData.csv","preShotData.csv"://,"postShotData.csv":
                         print(fullItemName)
+                        print("")
                         let CsvRef = itempath
                         let FileName =  fullItemName
-                        
+                        print(CsvRef)
+                        print("")
                         let DocumentDirURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
                         let FileURL = DocumentDirURL.appendingPathComponent(FileName)
                         CsvRef.write(toFile: FileURL){ url, error in
@@ -136,8 +138,10 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,Char
                         
                         if fileManager.fileExists(atPath: FileURL.path) {
                             print(itemName, ": File was created successfully")
+                            print("")
                         } else {
                             print(itemName, ": Failed to create the file")
+                            print("")
                         }
                         
                         
@@ -520,7 +524,7 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,Char
     @IBAction func onBtnStop(_ sender: UIButton) {
         switch AcaiaManager.shared().connectedScale {
         case nil:
-            performSegue(withIdentifier: "toScaleConnect", sender: self)
+            performSegue(withIdentifier: "toConnectST", sender: self)
         case .some(_):
             switch timer {
             case nil:

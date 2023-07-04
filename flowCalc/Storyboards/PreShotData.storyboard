@@ -24,13 +24,13 @@
                                 </connections>
                             </button>
                             <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Oj-1R-8uE">
-                                <rect key="frame" x="219" y="115" width="133" height="163"/>
+                                <rect key="frame" x="219" y="115.33333333333333" width="133" height="162.33333333333337"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="133" id="TKG-4n-56G"/>
                                 </constraints>
                             </pickerView>
                             <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UaN-17-rE5">
-                                <rect key="frame" x="360" y="116" width="133" height="162"/>
+                                <rect key="frame" x="359.66666666666669" y="115.66666666666669" width="133" height="162"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="133" id="YOu-1L-iiM"/>
                                 </constraints>
