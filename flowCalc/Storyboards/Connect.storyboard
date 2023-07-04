@@ -50,11 +50,22 @@
                     <connections>
                         <outlet property="tableView" destination="Z44-vO-wGB" id="ASm-Hp-pKs"/>
                         <segue destination="2CD-wg-F1D" kind="show" identifier="toPreShotData" id="m8O-Os-H5d"/>
+                        <segue destination="KDE-c2-a35" kind="show" identifier="toServoCal" id="54O-Wf-tRJ"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ngy-Jr-TYp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="340" y="-15"/>
+        </scene>
+        <!--ServoCalVC-->
+        <scene sceneID="8bc-iv-sye">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="ServoCalVC" storyboardName="ServoCal" referencedIdentifier="ServoCalVC" id="KDE-c2-a35" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="Pwu-TH-fXf"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bAw-EW-jUU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="711" y="434"/>
         </scene>
         <!--PreShotData-->
         <scene sceneID="kep-AB-otL">

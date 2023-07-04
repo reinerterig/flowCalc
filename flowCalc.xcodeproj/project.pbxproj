@@ -28,6 +28,8 @@
 		487B34432A53ECC700D260B1 /* AcaiaSDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 487B34422A53ECC600D260B1 /* AcaiaSDK.xcframework */; };
 		487B344E2A53FCA100D260B1 /* Connect.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 487B344D2A53FCA100D260B1 /* Connect.storyboard */; };
 		487B34502A53FCAE00D260B1 /* ConnectVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487B344F2A53FCAE00D260B1 /* ConnectVC.swift */; };
+		487B34522A53FDA900D260B1 /* ServoCal.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 487B34512A53FDA900D260B1 /* ServoCal.storyboard */; };
+		487B34542A53FDC000D260B1 /* ServoCalVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487B34532A53FDC000D260B1 /* ServoCalVC.swift */; };
 		48A4F0252A53CC5600D0E3CC /* BrevilleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A4F0242A53CC5600D0E3CC /* BrevilleManager.swift */; };
 		48A6C5342A467A3300A53D93 /* DGCharts in Frameworks */ = {isa = PBXBuildFile; productRef = 48A6C5332A467A3300A53D93 /* DGCharts */; };
 		48A6C5372A46916100A53D93 /* TinyConstraints in Frameworks */ = {isa = PBXBuildFile; productRef = 48A6C5362A46916100A53D93 /* TinyConstraints */; };
@@ -58,6 +60,8 @@
 		487B34422A53ECC600D260B1 /* AcaiaSDK.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = AcaiaSDK.xcframework; path = ../acaia_sdk_ios/AcaiaSDK.xcframework; sourceTree = "<group>"; };
 		487B344D2A53FCA100D260B1 /* Connect.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Connect.storyboard; sourceTree = "<group>"; };
 		487B344F2A53FCAE00D260B1 /* ConnectVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectVC.swift; sourceTree = "<group>"; };
+		487B34512A53FDA900D260B1 /* ServoCal.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ServoCal.storyboard; sourceTree = "<group>"; };
+		487B34532A53FDC000D260B1 /* ServoCalVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServoCalVC.swift; sourceTree = "<group>"; };
 		48A4F0242A53CC5600D0E3CC /* BrevilleManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BrevilleManager.swift; path = "../../../brewManager/ARD Blue Test/BrevilleManager.swift"; sourceTree = "<group>"; };
 		48A6C53B2A480CDD00A53D93 /* flowCalc.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = flowCalc.entitlements; sourceTree = "<group>"; };
 		48C9B5D62A4164DC0065000D /* flowCalc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = flowCalc.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -107,6 +111,7 @@
 				487B344D2A53FCA100D260B1 /* Connect.storyboard */,
 				4847E97D2A4D23A20003AAA9 /* PreShotData.storyboard */,
 				4847E9852A4D8F160003AAA9 /* PostShotData.storyboard */,
+				487B34512A53FDA900D260B1 /* ServoCal.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -123,6 +128,7 @@
 				487B344F2A53FCAE00D260B1 /* ConnectVC.swift */,
 				4847E9832A4D4E5C0003AAA9 /* Shared Data.swift */,
 				4847E9872A4D909B0003AAA9 /* PostShotVC.swift */,
+				487B34532A53FDC000D260B1 /* ServoCalVC.swift */,
 			);
 			path = VC;
 			sourceTree = "<group>";
@@ -262,6 +268,7 @@
 				4847E9862A4D8F160003AAA9 /* PostShotData.storyboard in Resources */,
 				481555462A492F4800A099FB /* GoogleService-Info.plist in Resources */,
 				487B344E2A53FCA100D260B1 /* Connect.storyboard in Resources */,
+				487B34522A53FDA900D260B1 /* ServoCal.storyboard in Resources */,
 				48C9B5E12A4164DD0065000D /* Main.storyboard in Resources */,
 				481233F42A454F8E00CD1251 /* weightChart.storyboard in Resources */,
 			);
@@ -277,6 +284,7 @@
 				4847E9882A4D909B0003AAA9 /* PostShotVC.swift in Sources */,
 				48C9B5DE2A4164DD0065000D /* ViewController.swift in Sources */,
 				487B34502A53FCAE00D260B1 /* ConnectVC.swift in Sources */,
+				487B34542A53FDC000D260B1 /* ServoCalVC.swift in Sources */,
 				4847E97C2A4CED8E0003AAA9 /* TampCamVC.swift in Sources */,
 				481233F62A454FAA00CD1251 /* ChartVC.swift in Sources */,
 				4847E9842A4D4E5C0003AAA9 /* Shared Data.swift in Sources */,

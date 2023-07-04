@@ -16,6 +16,16 @@ var scaleTime: String = "0"
 
 class ViewController: UIViewController {
     
+    var smoothedFlowRate: Double = 0.0 {
+        didSet {
+            NotificationCenter.default.post(name: NSNotification.Name("SmoothedFlowRateChanged"), object: nil, userInfo: ["value": smoothedFlowRate])
+        }
+    }
+    var newWeight: Double = Double(scaleWeight)!
+    var oldtWeight: Double = 0
+    var flowWeight: Double = 0
+    var flowArray: [Double] = []
+    
    
 
     override func viewDidLoad() {
@@ -93,9 +103,32 @@ extension ViewController {
         } else {
             scaleWeight = String(format: "%.4f", weight)
         }
-       // print(String(format: "%.1f g", weight))
-       // print(Double(scaleWeight))
+        createFlowChart(w: scaleWeight)
         
+    }
+    
+    //MARK: Smooth Flow
+    // converts weight data to flow also smoothes flow data
+    func createFlowChart(w: String){
+        newWeight = Double(w) ?? 0
+        flowWeight = newWeight - oldtWeight
+        flowArray.append(flowWeight)
+        
+        let windowSize = 20
+        let smoothedFlowArray: [Double]
+        
+        if flowArray.count <= windowSize {
+            smoothedFlowArray = flowArray
+        } else {
+            let startIndex = flowArray.count - windowSize
+            let endIndex = flowArray.count
+            smoothedFlowArray = Array(flowArray[startIndex..<endIndex])
+        }
+        
+        smoothedFlowRate = smoothedFlowArray.reduce(0, { x, y in x + y })
+        // Double(smoothedFlowArray.count)
+        
+        oldtWeight = newWeight
     }
     
     @objc private func _onTimer(noti: NSNotification) {

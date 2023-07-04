@@ -16,13 +16,9 @@ import FirebaseStorage
 
 
 class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,ChartViewDelegate {
-    var smoothedFlowRate: Double = 0
+    var flowRate: Double = 0
     var timer: Timer!
     var count: Double = 0
-    var newWeight: Double = Double(scaleWeight)!
-    var oldtWeight: Double = 0
-    var flowWeight: Double = 0
-    var flowArray: [Double] = []
     var chartMode: Bool = false
     var isRunning: Bool = false
     let uploadRef = Storage.storage().reference()
@@ -70,6 +66,8 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,Char
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
         longPressGesture.minimumPressDuration = 0.2 // Long press duration of one second
         self.view.addGestureRecognizer(longPressGesture)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(updateSmoothedFlowRate), name: NSNotification.Name(rawValue: "SmoothedFlowRateChanged"), object: nil)
     }
     
     
@@ -414,40 +412,27 @@ class ChartVC: UIViewController, UITableViewDelegate, UITableViewDataSource,Char
         ChartData.shared.weightData.append(weightDataEntry)
         
         // MARK: wight to flow
-        createFlowChart()
+        
         // every tick append update the chart with new time and flow entry
         
         
         // every tick append update the chart with new time and smoothed flow entry
-        let smoothedFlowDataEntry = ChartDataEntry(x: Double(m_s) ?? 0, y: smoothedFlowRate)
+        let smoothedFlowDataEntry = ChartDataEntry(x: Double(m_s) ?? 0, y: flowRate)
         ChartData.shared.smoothedFlowData.append(smoothedFlowDataEntry)
         
         self.updateChart(wdata: ChartData.shared.weightData, fdata: ChartData.shared.smoothedFlowData)
         
     }
     
-    //MARK: Smooth Flow
-    // converts weight data to flow also smoothes flow data
-    func createFlowChart(){
-        newWeight = Double(scaleWeight) ?? 0
-        flowWeight = newWeight - oldtWeight
-        flowArray.append(flowWeight)
-        
-        let windowSize = 20
-        let smoothedFlowArray: [Double]
-        
-        if flowArray.count <= windowSize {
-            smoothedFlowArray = flowArray
-        } else {
-            let startIndex = flowArray.count - windowSize
-            let endIndex = flowArray.count
-            smoothedFlowArray = Array(flowArray[startIndex..<endIndex])
+    @objc func updateSmoothedFlowRate(notification: NSNotification) {
+        if let data = notification.userInfo as? [String: Double] {
+            for (_, flowRate) in data {
+                self.flowRate = flowRate
+            }
         }
-        
-        smoothedFlowRate = smoothedFlowArray.reduce(0, { x, y in x + y }) / Double(smoothedFlowArray.count)
-        
-        oldtWeight = newWeight
     }
+
+    
     
     
     //MARK: create linechart
