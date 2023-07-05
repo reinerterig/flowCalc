@@ -46,7 +46,7 @@ class ServoCalVC: ViewController {
     
         if weight > 4 && maxSaved != true {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
-                self.findMaxflow()
+//                self.findMaxflow()
             }
         }
         

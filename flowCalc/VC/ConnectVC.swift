@@ -3,7 +3,7 @@ import CoreBluetooth
 import AcaiaSDK
 
 class ConnectVC: UITableViewController {
-    var Cal:Bool = true
+    var Cal:Bool = false
     private var timerForConnectTimeOut: Timer?
     private var arduinoPeripherals = [CBPeripheral]()
     private var acaiaScales = [AcaiaScale]()
@@ -100,18 +100,19 @@ class ConnectVC: UITableViewController {
     @objc private func didConnect(notification: NSNotification) {
         timerForConnectTimeOut?.invalidate()
         timerForConnectTimeOut = nil
-        if arduinoConnected && acaiaConnected {
-            performSegue(withIdentifier: "toServoCal", sender: self)
-//            if Cal != true {
-//                performSegue(withIdentifier: "toPreShotData", sender: self)
-//
-//            } else if Cal == true {
-//                performSegue(withIdentifier: "toServoCal", sender: self)
-//            }
+        switch Cal{
+          case true:
+            if arduinoConnected && acaiaConnected {
+                performSegue(withIdentifier: "toServoCal", sender: self)
+            }
+        case false:
+            if acaiaConnected{
+                performSegue(withIdentifier: "toPreShotData", sender: self)
+            }
         }
     }
     override func viewWillDisappear(_ animated: Bool) {
-        performSegue(withIdentifier: "toServoCal", sender: self)
+//        performSegue(withIdentifier: "toServoCal", sender: self)
     }
 
     @objc private func didFinishScan(notification: NSNotification) {

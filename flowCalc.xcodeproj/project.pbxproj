@@ -62,7 +62,7 @@
 		487B344F2A53FCAE00D260B1 /* ConnectVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectVC.swift; sourceTree = "<group>"; };
 		487B34512A53FDA900D260B1 /* ServoCal.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ServoCal.storyboard; sourceTree = "<group>"; };
 		487B34532A53FDC000D260B1 /* ServoCalVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServoCalVC.swift; sourceTree = "<group>"; };
-		48A4F0242A53CC5600D0E3CC /* BrevilleManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BrevilleManager.swift; path = "../../../brewManager/ARD Blue Test/BrevilleManager.swift"; sourceTree = "<group>"; };
+		48A4F0242A53CC5600D0E3CC /* BrevilleManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrevilleManager.swift; sourceTree = "<group>"; };
 		48A6C53B2A480CDD00A53D93 /* flowCalc.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = flowCalc.entitlements; sourceTree = "<group>"; };
 		48C9B5D62A4164DC0065000D /* flowCalc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = flowCalc.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48C9B5D92A4164DC0065000D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
