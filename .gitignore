@@ -4,3 +4,13 @@
 .aider.chat.history.md
 .aider.chat.history.md
 *.md
+.aider.chat.history.md
+.aider.ident.cache.v1/cache.db
+.aider.chat.history.md
+.aider.chat.history.md
+.aider.ident.cache.v1/cache.db-shm
+.aider.ident.cache.v1/cache.db-wal
+.aider.tags.cache.v1/cache.db
+.aider.tags.cache.v1/cache.db-shm
+.aider.tags.cache.v1/cache.db-wal
+.aider.chat.history.md
