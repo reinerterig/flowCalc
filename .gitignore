@@ -15,3 +15,4 @@
 .aider.tags.cache.v1/cache.db-wal
 .aider.chat.history.md
 *.md
+.aider.chat.history.md
