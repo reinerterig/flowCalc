@@ -8,8 +8,8 @@
 import UIKit
 import AcaiaSDK
 import SwiftUI
-import Charts
-import SnapKit
+//import Charts
+//import SnapKit
 
 var scaleWeight: String = "0"
 var scaleTime: String = "0"
